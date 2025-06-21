@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanjiMaster - Learn Japanese Characters</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7f0, #fff9e6);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            transition: background 0.3s;
+        }
+        
+        /* Language Toggle */
+        .language-toggle {
+            position: absolute;
+            top: 25px;
+            right: 20px;
+            z-index: 200;
+        }
+        
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .toggle-btn i {
+            color: #e62e1f;
+        }
+        
+        header {
+            background: #fff;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: #e62e1f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .logo-text span {
+            color: #e62e1f;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e62e1f;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(to right, #e62e1f, #f15a22);
+            color: white;
+            border-radius: 0 0 30px 30px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        #kanjiInput {
+            flex-grow: 1;
+            padding: 18px 25px;
+            border: none;
+            font-size: 1.2rem;
+            outline: none;
+        }
+        
+        #searchButton {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0 35px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        #searchButton:hover {
+            background: #e62e1f;
+        }
+        
+        .tool-container {
+            display: flex;
+            gap: 30px;
+            padding: 50px 0;
+        }
+        
+        .kanji-display {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .kanji-character {
+            font-size: 10rem; /* Adjusted for more info */
+            margin: 10px 0;
+            color: #333;
+            font-family: "Noto Serif JP", serif;
+        }
+        
+        .kanji-info {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .kanji-info h3 {
+            border-bottom: 2px solid #e62e1f;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #e62e1f;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Changed to single column */
+            gap: 15px;
+        }
+        
+        .info-item {
+            background: #f9f7f0;
+            padding: 12px;
+            border-radius: 10px;
+        }
+        
+        .info-item h4 {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .info-item p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            word-wrap: break-word;
+        }
+        
+        .stroke-order {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+        
+        .canvas-container {
+            background: #f9f7f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .canvas-layers {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        #guideCanvas, #drawingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #guideCanvas {
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        #drawingCanvas {
+            background: transparent;
+            border-radius: 10px;
+            cursor: crosshair;
+            z-index: 2;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary {
+            background: #f9f7f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e4d9;
+        }
+        
+        .btn-load-more {
+            background-color: #e62e1f;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 20px;
+        }
+        .btn-load-more:hover {
+             background: #c52619;
+        }
+
+        .practice-info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f9f7f0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .practice-info strong {
+            color: #e62e1f;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #333;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #e62e1f;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .kanji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        
+        .kanji-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .kanji-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(230, 46, 31, 0.15);
+        }
+        
+        .kanji-card .character {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-family: "Noto Serif JP", serif;
+            line-height: 1;
+        }
+        
+        .kanji-card .meaning {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .practice-instructions {
+            background: #f0f9ff;
+            border-left: 4px solid #e62e1f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .practice-instructions h4 {
+            margin-bottom: 8px;
+            color: #e62e1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .guide-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .guide-toggle {
+            width: 50px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .guide-toggle.active {
+            background: #e62e1f;
+        }
+        
+        .guide-toggle-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+        
+        .guide-toggle.active .guide-toggle-handle {
+            transform: translateX(26px);
+        }
+
+        /* JLPT Levels Section Styles */
+        .jlpt-levels {
+            padding: 50px 0;
+        }
+
+        .jlpt-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .jlpt-tab-btn {
+            padding: 12px 25px;
+            border: 2px solid #ddd;
+            background-color: #fff;
+            color: #555;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .jlpt-tab-btn:hover {
+            background-color: #f9f7f0;
+            border-color: #e62e1f;
+        }
+
+        .jlpt-tab-btn.active {
+            background-color: #e62e1f;
+            color: #fff;
+            border-color: #e62e1f;
+            box-shadow: 0 4px 15px rgba(230, 46, 31, 0.3);
+        }
+
+        #load-more-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .tool-container { flex-direction: column; }
+            .hero h1 { font-size: 2.3rem; }
+            nav ul { display: none; }
+            .language-toggle { top: 90px; right: 20px; }
+        }
+        
+        @media (max-width: 600px) {
+            .kanji-character { font-size: 8rem; }
+            .kanji-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .section-title { font-size: 1.8rem; }
+            .toggle-btn { padding: 6px 12px; font-size: 0.8rem; }
+            .controls { gap: 10px; }
+            .btn { padding: 10px 15px; font-size: 0.9rem; }
+            .jlpt-tab-btn { padding: 8px 15px; font-size: 0.9rem;}
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <button class="toggle-btn" id="langToggle">
+            <i class="fas fa-globe"></i> 
+            <span id="langText">English</span>
+        </button>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon"><i class="fas fa-brush"></i></div>
+                    <div class="logo-text">Kanji<span>Master</span></div>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#" data-key="navHome">Home</a></li>
+                        <li><a href="#" data-key="navKanjiList">Kanji List</a></li>
+                        <li><a href="#" data-key="navJlptLevels">JLPT Levels</a></li>
+                        <li><a href="#" data-key="navBlog">Blog</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1 data-key="heroTitle">Master Japanese Kanji</h1>
+            <p data-key="heroSubtitle">Explore Kanji by JLPT level and perfect your writing with our practice tool.</p>
+            <div class="search-box">
+                <input type="text" id="kanjiInput" placeholder="Enter a kanji (e.g., 漢, 語, 日)" data-key-placeholder="kanjiInputPlaceholder">
+                <button id="searchButton"><i class="fas fa-search"></i> <span data-key="searchText">Search</span></button>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="tool-container">
+            <div class="kanji-display">
+                <div class="kanji-character" id="kanjiChar">日</div>
+                <div class="kanji-info">
+                    <h3 data-key="kanjiInfoTitle">Kanji Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item"><h4 data-key="meaningLabel">Meaning</h4><p id="kanjiMeaning">Day, Sun</p></div>
+                        <div class="info-item"><h4 data-key="readingKanaLabel">Reading (Kana)</h4><p id="kanjiReadingKana">ニチ、ジツ / ひ、-び、-か</p></div>
+                        <div class="info-item"><h4 data-key="readingRomajiLabel">Reading (Romaji)</h4><p id="kanjiReadingRomaji">NICHI, JITSU / hi, -bi, -ka</p></div>
+                        <div class="info-item"><h4 data-key="strokeLabel">Strokes</h4><p id="kanjiStrokes">4 Strokes</p></div>
+                        <div class="info-item"><h4 data-key="jlptLabel">JLPT Level</h4><p id="kanjiJlpt">N5</p></div>
+                        <div class="info-item"><h4 data-key="gradeLabel">Grade</h4><p id="kanjiGrade">Grade 1</p></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stroke-order">
+                <h2 data-key="strokeTitle">Practice Canvas</h2>
+                <div class="practice-instructions">
+                    <h4><i class="fas fa-pencil-alt"></i> <span data-key="practiceModeTitle">Practice Mode</span></h4>
+                    <p data-key="practiceDesc">Use your mouse or finger to draw the kanji on the canvas below. You can toggle the guide display.</p>
+                </div>
+                <div class="canvas-container">
+                    <div class="canvas-layers">
+                        <canvas id="guideCanvas" width="300" height="300"></canvas>
+                        <canvas id="drawingCanvas" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="guide-control">
+                    <div class="guide-toggle active" id="guideToggle"><div class="guide-toggle-handle"></div></div>
+                    <span id="guideLabel" data-key="guideLabelShow">Show Guide</span>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-secondary" id="clearBtn"><i class="fas fa-eraser"></i> <span data-key="clearText">Clear</span></button>
+                    <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-redo"></i> <span data-key="resetText">Reset</span></button>
+                </div>
+                <div class="practice-info">
+                    <p><strong data-key="practiceInfoChar">Character:</strong> <span id="practiceChar">日</span> | <strong data-key="practiceInfoStrokes">Strokes:</strong> <span id="practiceStrokes">4</span></p>
+                </div>
+            </div>
+        </div>
+
+        <section class="jlpt-levels">
+            <h2 class="section-title" data-key="jlptSectionTitle">Kanji by JLPT Level</h2>
+            <div class="jlpt-tabs">
+                <button class="jlpt-tab-btn active" data-level="N5">N5</button>
+                <button class="jlpt-tab-btn" data-level="N4">N4</button>
+                <button class="jlpt-tab-btn" data-level="N3">N3</button>
+                <button class="jlpt-tab-btn" data-level="N2">N2</button>
+                <button class="jlpt-tab-btn" data-level="N1">N1</button>
+            </div>
+            <div class="jlpt-content">
+                <div id="jlpt-kanji-grid" class="kanji-grid"></div>
+                <div id="load-more-container"></div>
+            </div>
+        </section>
+        
+    </div>
+    
+    <script>
+        // --- LANGUAGE & TRANSLATION ---
+        let isEnglish = true;
+
+        const translations = {
+            en: {
+                navHome: "Home", navKanjiList: "Kanji List", navJlptLevels: "JLPT Levels", navBlog: "Blog",
+                heroTitle: "Master Japanese Kanji",
+                heroSubtitle: "Explore Kanji by JLPT level and perfect your writing with our practice tool.",
+                kanjiInputPlaceholder: "Enter a kanji (e.g., 漢, 語, 日)",
+                searchText: "Search", kanjiInfoTitle: "Kanji Information",
+                meaningLabel: "Meaning", readingKanaLabel: "Reading (Kana)", readingRomajiLabel: "Reading (Romaji)",
+                strokeLabel: "Strokes", jlptLabel: "JLPT Level", gradeLabel: "Grade",
+                strokeTitle: "Practice Canvas", practiceModeTitle: "Practice Mode",
+                practiceDesc: "Use your mouse or finger to draw the kanji on the canvas below. You can toggle the guide display.",
+                guideLabelShow: "Show Guide", guideLabelHide: "Hide Guide", clearText: "Clear", resetText: "Reset",
+                practiceInfoChar: "Character:", practiceInfoStrokes: "Strokes:",
+                jlptSectionTitle: "Kanji by JLPT Level", loadMore: "Load More",
+            },
+            jp: {
+                navHome: "ホーム", navKanjiList: "漢字リスト", navJlptLevels: "JLPT レベル", navBlog: "ブログ",
+                heroTitle: "日本の漢字をマスターしよう",
+                heroSubtitle: "JLPTレベル別に漢字を探し、練習ツールで書き方を完璧にしましょう。",
+                kanjiInputPlaceholder: "漢字を入力してください (例: 漢, 語, 日)",
+                searchText: "検索", kanjiInfoTitle: "漢字情報",
+                meaningLabel: "意味", readingKanaLabel: "読み方（かな）", readingRomajiLabel: "読み方（ローマ字）",
+                strokeLabel: "画数", jlptLabel: "JLPTレベル", gradeLabel: "学年",
+                strokeTitle: "練習キャンバス", practiceModeTitle: "練習モード",
+                practiceDesc: "下のキャンバスにマウスや指を使って漢字を描いてみましょう。ガイド表示を切り替えることができます。",
+                guideLabelShow: "ガイドを表示", guideLabelHide: "ガイドを隠す", clearText: "クリア", resetText: "リセット",
+                practiceInfoChar: "文字:", practiceInfoStrokes: "画数:",
+                jlptSectionTitle: "JLPTレベル別漢字", loadMore: "もっと読み込む",
+            }
+        };
+
+        function updateLanguage() {
+            const lang = isEnglish ? 'en' : 'jp';
+            document.getElementById('langText').textContent = isEnglish ? '日本語' : 'English';
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.dataset.key;
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+
+            document.querySelectorAll('[data-key-placeholder]').forEach(el => {
+                const key = el.dataset.keyPlaceholder;
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            updateKanjiInfo(currentKanji);
+            document.querySelectorAll('#jlpt-kanji-grid .meaning').forEach(card => {
+                const kanji = card.parentElement.dataset.kanji;
+                card.textContent = kanjiDatabase[kanji].meaning[lang];
+            });
+            updateLoadMoreButton();
+        }
+        
+        // --- KANJI DATABASE ---
+        // Each entry now has a reading object with 'kana' and 'romaji'
+        const kanjiDatabase = {
+            // JLPT N5 (103 Kanji)
+'一': { reading: { kana: 'イチ, イツ / ひと', romaji: 'ICHI, ITSU / hito' }, meaning: {jp: 'ひとつ', en: 'One'}, strokesCount: 1, jlpt: 'N5', grade: '1' },
+'二': { reading: { kana: 'ニ / ふた', romaji: 'NI / futa' }, meaning: {jp: 'ふたつ', en: 'Two'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'三': { reading: { kana: 'サン / み', romaji: 'SAN / mi' }, meaning: {jp: 'みっつ', en: 'Three'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'四': { reading: { kana: 'シ / よん, よ', romaji: 'SHI / yon, yo' }, meaning: {jp: 'よっつ', en: 'Four'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'五': { reading: { kana: 'ゴ / いつ', romaji: 'GO / itsu' }, meaning: {jp: 'いつつ', en: 'Five'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'六': { reading: { kana: 'ロク / む', romaji: 'ROKU / mu' }, meaning: {jp: 'むっつ', en: 'Six'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'七': { reading: { kana: 'シチ / なな', romaji: 'SHICHI / nana' }, meaning: {jp: 'ななつ', en: 'Seven'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'八': { reading: { kana: 'ハチ / や', romaji: 'HACHI / ya' }, meaning: {jp: 'やっつ', en: 'Eight'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'九': { reading: { kana: 'キュウ, ク / ここの', romaji: 'KYUU, KU / kokono' }, meaning: {jp: 'ここのつ', en: 'Nine'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'十': { reading: { kana: 'ジュウ / とお', romaji: 'JUU / too' }, meaning: {jp: 'とお', en: 'Ten'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'百': { reading: { kana: 'ヒャク', romaji: 'HYAKU' }, meaning: {jp: 'ひゃく', en: 'Hundred'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'千': { reading: { kana: 'セン / ち', romaji: 'SEN / chi' }, meaning: {jp: 'せん', en: 'Thousand'}, strokesCount: 3, jlpt: 'N5', grade: '2' },
+'万': { reading: { kana: 'マン, バン', romaji: 'MAN, BAN' }, meaning: {jp: 'まん', en: 'Ten Thousand'}, strokesCount: 3, jlpt: 'N5', grade: '2' },
+'円': { reading: { kana: 'エン / まる', romaji: 'EN / maru' }, meaning: {jp: 'えん', en: 'Yen, Circle'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'日': { reading: { kana: 'ニチ, ジツ / ひ, -か', romaji: 'NICHI, JITSU / hi, -ka' }, meaning: {jp: 'ひ, にち', en: 'Day, Sun'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'週': { reading: { kana: 'シュウ', romaji: 'SHUU' }, meaning: {jp: 'しゅう', en: 'Week'}, strokesCount: 11, jlpt: 'N5', grade: '2' },
+'月': { reading: { kana: 'ゲツ, ガツ / つき', romaji: 'GETSU, GATSU / tsuki' }, meaning: {jp: 'つき', en: 'Month, Moon'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'年': { reading: { kana: 'ネン / とし', romaji: 'NEN / toshi' }, meaning: {jp: 'とし', en: 'Year'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'時': { reading: { kana: 'ジ / とき', romaji: 'JI / toki' }, meaning: {jp: 'とき, じかん', en: 'Time, Hour'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+'間': { reading: { kana: 'カン, ケン / あいだ', romaji: 'KAN, KEN / aida' }, meaning: {jp: 'あいだ', en: 'Interval, Between'}, strokesCount: 12, jlpt: 'N5', grade: '2' },
+'分': { reading: { kana: 'フン, ブン, プン / わ', romaji: 'FUN, BUN, PUN / wa' }, meaning: {jp: 'わける', en: 'Minute, Part, To divide'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'午': { reading: { kana: 'ゴ', romaji: 'GO' }, meaning: {jp: 'ごぜん, ごご', en: 'Noon'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'前': { reading: { kana: 'ゼン / まえ', romaji: 'ZEN / mae' }, meaning: {jp: 'まえ', en: 'Front, Before'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+'後': { reading: { kana: 'ゴ, コウ / うし, あと', romaji: 'GO, KOU / ushiro, ato' }, meaning: {jp: 'うしろ, あと', en: 'Back, After'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+'今': { reading: { kana: 'コン, キン / いま', romaji: 'KON, KIN / ima' }, meaning: {jp: 'いま', en: 'Now'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'先': { reading: { kana: 'セン / さき', romaji: 'SEN / saki' }, meaning: {jp: 'さき', en: 'Ahead, Previous'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'来': { reading: { kana: 'ライ / く', romaji: 'RAI / ku' }, meaning: {jp: 'くる', en: 'To come'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+'半': { reading: { kana: 'ハン / なか', romaji: 'HAN / naka' }, meaning: {jp: 'はんぶん', en: 'Half'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+'毎': { reading: { kana: 'マイ', romaji: 'MAI' }, meaning: {jp: 'まいにち', en: 'Every'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+'何': { reading: { kana: 'カ / なに, なん', romaji: 'KA / nani, nan' }, meaning: {jp: 'なに', en: 'What'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+'人': { reading: { kana: 'ジン, ニン / ひと', romaji: 'JIN, NIN / hito' }, meaning: {jp: 'ひと', en: 'Person'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'男': { reading: { kana: 'ダン, ナン / おとこ', romaji: 'DAN, NAN / otoko' }, meaning: {jp: 'おとこ', en: 'Man'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+'女': { reading: { kana: 'ジョ, ニョ / おんな', romaji: 'JO, NYO / onna' }, meaning: {jp: 'おんな', en: 'Woman'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'子': { reading: { kana: 'シ, ス / こ', romaji: 'SHI, SU / ko' }, meaning: {jp: 'こども', en: 'Child'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'母': { reading: { kana: 'ボ / はは', romaji: 'BO / haha' }, meaning: {jp: 'はは', en: 'Mother'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+'父': { reading: { kana: 'フ / ちち', romaji: 'FU / chichi' }, meaning: {jp: 'ちち', en: 'Father'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'友': { reading: { kana: 'ユウ / とも', romaji: 'YUU / tomo' }, meaning: {jp: 'ともだち', en: 'Friend'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'火': { reading: { kana: 'カ / ひ', romaji: 'KA / hi' }, meaning: {jp: 'ひ', en: 'Fire'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'水': { reading: { kana: 'スイ / みず', romaji: 'SUI / mizu' }, meaning: {jp: 'みず', en: 'Water'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'木': { reading: { kana: 'ボク, モク / き', romaji: 'BOKU, MOKU / ki' }, meaning: {jp: 'き', en: 'Tree, Wood'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'金': { reading: { kana: 'キン / かね', romaji: 'KIN / kane' }, meaning: {jp: 'おかね', en: 'Gold, Money'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+'土': { reading: { kana: 'ド, ト / つち', romaji: 'DO, TO / tsuchi' }, meaning: {jp: 'つち', en: 'Earth, Soil'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'山': { reading: { kana: 'サン / やま', romaji: 'SAN / yama' }, meaning: {jp: 'やま', en: 'Mountain'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'川': { reading: { kana: 'セン / かわ', romaji: 'SEN / kawa' }, meaning: {jp: 'かわ', en: 'River'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'田': { reading: { kana: 'デン / た', romaji: 'DEN / ta' }, meaning: {jp: 'た', en: 'Rice Field'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'上': { reading: { kana: 'ジョウ / うえ, あ', romaji: 'JOU / ue, a' }, meaning: {jp: 'うえ', en: 'Up, Above'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'下': { reading: { kana: 'カ, ゲ / した, さ', romaji: 'KA, GE / shita, sa' }, meaning: {jp: 'した', en: 'Down, Below'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'中': { reading: { kana: 'チュウ / なか', romaji: 'CHUU / naka' }, meaning: {jp: 'なか', en: 'Middle, Inside'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'右': { reading: { kana: 'ウ, ユウ / みぎ', romaji: 'U, YUU / migi' }, meaning: {jp: 'みぎ', en: 'Right'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'左': { reading: { kana: 'サ / ひだり', romaji: 'SA / hidari' }, meaning: {jp: 'ひだり', en: 'Left'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'東': { reading: { kana: 'トウ / ひがし', romaji: 'TOU / higashi' }, meaning: {jp: 'ひがし', en: 'East'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+'西': { reading: { kana: 'セイ, サイ / にし', romaji: 'SEI, SAI / nishi' }, meaning: {jp: 'にし', en: 'West'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+'南': { reading: { kana: 'ナン / みなみ', romaji: 'NAN / minami' }, meaning: {jp: 'みなみ', en: 'South'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+'北': { reading: { kana: 'ホク / きた', romaji: 'HOKU / kita' }, meaning: {jp: 'きた', en: 'North'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+'外': { reading: { kana: 'ガイ / そと', romaji: 'GAI / soto' }, meaning: {jp: 'そと', en: 'Outside'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+'名': { reading: { kana: 'メイ, ミョウ / な', romaji: 'MEI, MYOU / na' }, meaning: {jp: 'なまえ', en: 'Name'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'高': { reading: { kana: 'コウ / たか', romaji: 'KOU / taka' }, meaning: {jp: 'たかい', en: 'High, Tall, Expensive'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+'小': { reading: { kana: 'ショウ / ちい', romaji: 'SHOU / chii' }, meaning: {jp: 'ちいさい', en: 'Small'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'大': { reading: { kana: 'ダイ, タイ / おお', romaji: 'DAI, TAI / oo' }, meaning: {jp: 'おおきい', en: 'Big'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'長': { reading: { kana: 'チョウ / なが', romaji: 'CHOU / naga' }, meaning: {jp: 'ながい', en: 'Long'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+'安': { reading: { kana: 'アン / やす', romaji: 'AN / yasu' }, meaning: {jp: 'やすい', en: 'Cheap, Safe'}, strokesCount: 6, jlpt: 'N5', grade: '4' },
+'新': { reading: { kana: 'シン / あたら', romaji: 'SHIN / atara' }, meaning: {jp: 'あたらしい', en: 'New'}, strokesCount: 13, jlpt: 'N5', grade: '2' },
+'古': { reading: { kana: 'コ / ふる', romaji: 'KO / furu' }, meaning: {jp: 'ふるい', en: 'Old'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+'多': { reading: { kana: 'タ / おお', romaji: 'TA / oo' }, meaning: {jp: 'おおい', en: 'Many, Much'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+'少': { reading: { kana: 'ショウ / すく, すこ', romaji: 'SHOU / suku, suko' }, meaning: {jp: 'すくない', en: 'Few, a little'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+'白': { reading: { kana: 'ハク / しろ', romaji: 'HAKU / shiro' }, meaning: {jp: 'しろい', en: 'White'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'天': { reading: { kana: 'テン / あめ', romaji: 'TEN / ame' }, meaning: {jp: 'てんき', en: 'Heaven, Sky'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'気': { reading: { kana: 'キ, ケ', romaji: 'KI, KE' }, meaning: {jp: 'げんき', en: 'Spirit, Air, Mood'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'雨': { reading: { kana: 'ウ / あめ', romaji: 'U / ame' }, meaning: {jp: 'あめ', en: 'Rain'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+'電': { reading: { kana: 'デン', romaji: 'DEN' }, meaning: {jp: 'でんき', en: 'Electricity'}, strokesCount: 13, jlpt: 'N5', grade: '2' },
+'車': { reading: { kana: 'シャ / くるま', romaji: 'SHA / kuruma' }, meaning: {jp: 'くるま', en: 'Car, Vehicle'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+'国': { reading: { kana: 'コク / くに', romaji: 'KOKU / kuni' }, meaning: {jp: 'くに', en: 'Country'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+'語': { reading: { kana: 'ゴ / かた', romaji: 'GO / kata' }, meaning: {jp: 'にほんご', en: 'Language, Word'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+'英': { reading: { kana: 'エイ', romaji: 'EI' }, meaning: {jp: 'えいご', en: 'England, English'}, strokesCount: 8, jlpt: 'N5', grade: '4' },
+'本': { reading: { kana: 'ホン / もと', romaji: 'HON / moto' }, meaning: {jp: 'ほん, にほん', en: 'Book, Origin'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'店': { reading: { kana: 'テン / みせ', romaji: 'TEN / mise' }, meaning: {jp: 'みせ', en: 'Shop'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+'駅': { reading: { kana: 'エキ', romaji: 'EKI' }, meaning: {jp: 'えき', en: 'Station'}, strokesCount: 14, jlpt: 'N5', grade: '3' },
+'道': { reading: { kana: 'ドウ / みち', romaji: 'DOU / michi' }, meaning: {jp: 'みち', en: 'Road, Way'}, strokesCount: 12, jlpt: 'N5', grade: '2' },
+'社': { reading: { kana: 'シャ / やしろ', romaji: 'SHA / yashiro' }, meaning: {jp: 'かいしゃ', en: 'Company, Shrine'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+'会': { reading: { kana: 'カイ / あ', romaji: 'KAI / a' }, meaning: {jp: 'あう', en: 'To meet'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+'学': { reading: { kana: 'ガク / まな', romaji: 'GAKU / mana' }, meaning: {jp: 'がっこう', en: 'Study, School'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+'校': { reading: 'コウ', romaji: 'KOU', meaning: {jp: 'がっこう', en: 'School'}, strokesCount: 10, jlpt: 'N5', grade: '1' },
+'生': { reading: { kana: 'セイ, ショウ / う, い', romaji: 'SEI, SHOU / u, i' }, meaning: {jp: 'がくせい', en: 'Life, Birth, Student'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'行': { reading: { kana: 'コウ, ギョウ / い, ゆ', romaji: 'KOU, GYOU / i, yu' }, meaning: {jp: 'いく', en: 'To go'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+'見': { reading: { kana: 'ケン / み', romaji: 'KEN / mi' }, meaning: {jp: 'みる', en: 'To see'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+'出': { reading: { kana: 'シュツ / で, だ', romaji: 'SHUTSU / de, da' }, meaning: {jp: 'でる', en: 'To exit'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'入': { reading: { kana: 'ニュウ / はい, い', romaji: 'NYUU / hai, i' }, meaning: {jp: 'はいる', en: 'To enter'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+'食': { reading: { kana: 'ショク / た', romaji: 'SHOKU / ta' }, meaning: {jp: 'たべる', en: 'To eat'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+'飲': { reading: { kana: 'イン / の', romaji: 'IN / no' }, meaning: {jp: 'のむ', en: 'To drink'}, strokesCount: 12, jlpt: 'N5', grade: '3' },
+'買': { reading: { kana: 'バイ / か', romaji: 'BAI / ka' }, meaning: {jp: 'かう', en: 'To buy'}, strokesCount: 12, jlpt: 'N5', grade: '2' },
+'言': { reading: { kana: 'ゲン, ゴン / い', romaji: 'GEN, GON / i' }, meaning: {jp: 'いう', en: 'To say'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+'話': { reading: { kana: 'ワ / はな, はなし', romaji: 'WA / hana, hanashi' }, meaning: {jp: 'はなす', en: 'To speak'}, strokesCount: 13, jlpt: 'N5', grade: '2' },
+'読': { reading: { kana: 'ドク / よ', romaji: 'DOKU / yo' }, meaning: {jp: 'よむ', en: 'To read'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+'書': { reading: { kana: 'ショ / か', romaji: 'SHO / ka' }, meaning: {jp: 'かく', en: 'To write'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+'聞': { reading: { kana: 'ブン, モン / き', romaji: 'BUN, MON / ki' }, meaning: {jp: 'きく', en: 'To hear, listen'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+'立': { reading: { kana: 'リツ / た', romaji: 'RITSU / ta' }, meaning: {jp: 'たつ', en: 'To stand'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'休': { reading: { kana: 'キュウ / やす', romaji: 'KYUU / yasu' }, meaning: {jp: 'やすむ', en: 'To rest'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'花': { reading: { kana: 'カ / はな', romaji: 'KA / hana' }, meaning: {jp: 'はな', en: 'Flower'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+'空': { reading: { kana: 'クウ / そら', romaji: 'KUU / sora' }, meaning: {jp: 'そら', en: 'Sky, Empty'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+'魚': { reading: { kana: 'ギョ / さかな', romaji: 'GYO / sakana' }, meaning: {jp: 'さかな', en: 'Fish'}, strokesCount: 11, jlpt: 'N5', grade: '2' },
+'犬': { reading: { kana: 'ケン / いぬ', romaji: 'KEN / inu' }, meaning: {jp: 'いぬ', en: 'Dog'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'足': { reading: { kana: 'ソク / あし', romaji: 'SOKU / ashi' }, meaning: {jp: 'あし', en: 'Leg, Foot'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+'耳': { reading: { kana: 'ジ / みみ', romaji: 'JI / mimi' }, meaning: {jp: 'みみ', en: 'Ear'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+'手': { reading: { kana: 'シュ / て', romaji: 'SHU / te' }, meaning: {jp: 'て', en: 'Hand'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+'口': { reading: { kana: 'コウ / くち', romaji: 'KOU / kuchi' }, meaning: {jp: 'くち', en: 'Mouth'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+'目': { reading: { kana: 'モク / め', romaji: 'MOKU / me' }, meaning: {jp: 'め', en: 'Eye'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+'私': { reading: { kana: 'シ / わたし', romaji: 'SHI / watashi' }, meaning: {jp: 'わたし', en: 'I, private'}, strokesCount: 7, jlpt: 'N5', grade: '3' },
+'何': { reading: { kana: 'カ / なに, なん', romaji: 'KA / nani, nan' }, meaning: {jp: 'なに', en: 'What'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+'何': { reading: { kana: 'カ / なに, なん', romaji: 'KA / nani, nan' }, meaning: {jp: 'なに', en: 'What'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+// N4 Samples
+            // JLPT N4 (~184 Kanji)
+'会': { reading: { kana: 'カイ / あ', romaji: 'KAI / a' }, meaning: {jp: 'あう, かいしゃ', en: 'To meet, Meeting, Company'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'同': { reading: { kana: 'ドウ / おな', romaji: 'DOU / ona' }, meaning: {jp: 'おなじ', en: 'Same'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'事': { reading: { kana: 'ジ / こと', romaji: 'JI / koto' }, meaning: {jp: 'しごと', en: 'Thing, Matter, Affair'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'自': { reading: { kana: 'ジ, シ / みずか', romaji: 'JI, SHI / mizuka' }, meaning: {jp: 'じぶん', en: 'Oneself'}, strokesCount: 6, jlpt: 'N4', grade: '3' },
+'社': { reading: { kana: 'シャ / やしろ', romaji: 'SHA / yashiro' }, meaning: {jp: 'かいしゃ', en: 'Company, Shrine'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'発': { reading: { kana: 'ハツ, ホツ', romaji: 'HATSU, HOTSU' }, meaning: {jp: 'しゅっぱつ', en: 'To start, To depart'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'者': { reading: { kana: 'シャ / もの', romaji: 'SHA / mono' }, meaning: {jp: 'もの', en: 'Person'}, strokesCount: 8, jlpt: 'N4', grade: '4' },
+'地': { reading: { kana: 'チ, ジ', romaji: 'CHI, JI' }, meaning: {jp: 'ちず', en: 'Ground, Earth'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'業': { reading: { kana: 'ギョウ', romaji: 'GYOU' }, meaning: {jp: 'じゅぎょう', en: 'Business, Vocation'}, strokesCount: 13, jlpt: 'N4', grade: '3' },
+'方': { reading: { kana: 'ホウ / かた', romaji: 'HOU / kata' }, meaning: {jp: 'かた', en: 'Direction, Person (polite)'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'新': { reading: { kana: 'シン / あたら', romaji: 'SHIN / atara' }, meaning: {jp: 'あたらしい', en: 'New'}, strokesCount: 13, jlpt: 'N4', grade: '2' },
+'場': { reading: { kana: 'ジョウ / ば', romaji: 'JOU / ba' }, meaning: {jp: 'ばしょ', en: 'Place'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'員': { reading: { kana: 'イン', romaji: 'IN' }, meaning: {jp: 'かいいん', en: 'Member'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'立': { reading: { kana: 'リツ / た', romaji: 'RITSU / ta' }, meaning: {jp: 'たつ', en: 'To stand'}, strokesCount: 5, jlpt: 'N4', grade: '1' },
+'開': { reading: { kana: 'カイ / ひら, あ', romaji: 'KAI / hira, a' }, meaning: {jp: 'あける', en: 'To open'}, strokesCount: 12, jlpt: 'N4', grade: '3' },
+'手': { reading: { kana: 'シュ / て', romaji: 'SHU / te' }, meaning: {jp: 'て', en: 'Hand'}, strokesCount: 4, jlpt: 'N4', grade: '1' },
+'力': { reading: { kana: 'リョク, リキ / ちから', romaji: 'RYOKU, RIKI / chikara' }, meaning: {jp: 'ちから', en: 'Power, Strength'}, strokesCount: 2, jlpt: 'N4', grade: '1' },
+'問': { reading: { kana: 'モン / と', romaji: 'MON / to' }, meaning: {jp: 'しつもん', en: 'Question, Problem'}, strokesCount: 11, jlpt: 'N4', grade: '3' },
+'代': { reading: { kana: 'ダイ / か', romaji: 'DAI / ka' }, meaning: {jp: 'かわりに', en: 'To substitute, Generation, Age'}, strokesCount: 5, jlpt: 'N4', grade: '3' },
+'明': { reading: { kana: 'メイ / あか, あ', romaji: 'MEI / aka, a' }, meaning: {jp: 'あかるい', en: 'Bright, Light'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'動': { reading: { kana: 'ドウ / うご', romaji: 'DOU / ugo' }, meaning: {jp: 'うごく', en: 'To move'}, strokesCount: 11, jlpt: 'N4', grade: '3' },
+'京': { reading: { kana: 'キョウ, ケイ', romaji: 'KYOU, KEI' }, meaning: {jp: 'とうきょう', en: 'Capital'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'目': { reading: { kana: 'モク / め', romaji: 'MOKU / me' }, meaning: {jp: 'め', en: 'Eye'}, strokesCount: 5, jlpt: 'N4', grade: '1' },
+'通': { reading: { kana: 'ツウ / とお, かよ', romaji: 'TSUU / too, kayo' }, meaning: {jp: 'とおる', en: 'To pass, To commute'}, strokesCount: 10, jlpt: 'N4', grade: '2' },
+'言': { reading: { kana: 'ゲン, ゴン / い', romaji: 'GEN, GON / i' }, meaning: {jp: 'いう', en: 'To say, Word'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'理': { reading: { kana: 'リ', romaji: 'RI' }, meaning: {jp: 'りょうり', en: 'Reason, Logic'}, strokesCount: 11, jlpt: 'N4', grade: '4' },
+'体': { reading: { kana: 'タイ / からだ', romaji: 'TAI / karada' }, meaning: {jp: 'からだ', en: 'Body'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'田': { reading: { kana: 'デン / た', romaji: 'DEN / ta' }, meaning: {jp: 'た', en: 'Rice Field'}, strokesCount: 5, jlpt: 'N4', grade: '1' },
+'主': { reading: { kana: 'シュ / ぬし', romaji: 'SHU / nushi' }, meaning: {jp: 'ごしゅじん', en: 'Master, Main'}, strokesCount: 5, jlpt: 'N4', grade: '3' },
+'題': { reading: { kana: 'ダイ', romaji: 'DAI' }, meaning: {jp: 'もんだい', en: 'Topic, Subject'}, strokesCount: 18, jlpt: 'N4', grade: '3' },
+'意': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いみ', en: 'Mind, Meaning'}, strokesCount: 13, jlpt: 'N4', grade: '3' },
+'不': { reading: { kana: 'フ, ブ', romaji: 'FU, BU' }, meaning: {jp: 'ふべん', en: 'Not, Un-'}, strokesCount: 4, jlpt: 'N4', grade: '4' },
+'作': { reading: { kana: 'サク / つく', romaji: 'SAKU / tsuku' }, meaning: {jp: 'つくる', en: 'To make'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'用': { reading: { kana: 'ヨウ / もち', romaji: 'YOU / mochi' }, meaning: {jp: 'ようじ', en: 'To use, Business'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'度': { reading: { kana: 'ド', romaji: 'DO' }, meaning: {jp: 'こんど', en: 'Degree, Time(s)'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'強': { reading: { kana: 'キョウ / つよ', romaji: 'KYOU / tsuyo' }, meaning: {jp: 'つよい', en: 'Strong'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'公': { reading: { kana: 'コウ', romaji: 'KOU' }, meaning: {jp: 'こうえん', en: 'Public'}, strokesCount: 4, jlpt: 'N4', grade: '4' },
+'持': { reading: { kana: 'ジ / も', romaji: 'JI / mo' }, meaning: {jp: 'もつ', en: 'To hold, To have'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'野': { reading: { kana: 'ヤ / の', romaji: 'YA / no' }, meaning: {jp: 'やさい', en: 'Field'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'以': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いじょう', en: 'By means of, Since'}, strokesCount: 5, jlpt: 'N4', grade: '4' },
+'思': { reading: { kana: 'シ / おも', romaji: 'SHI / omo' }, meaning: {jp: 'おもう', en: 'To think'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'家': { reading: { kana: 'カ / いえ', romaji: 'KA / ie' }, meaning: {jp: 'いえ, かぞく', en: 'House, Family'}, strokesCount: 10, jlpt: 'N4', grade: '2' },
+'世': { reading: { kana: 'セイ / よ', romaji: 'SEI / yo' }, meaning: {jp: 'せかい', en: 'World, Generation'}, strokesCount: 5, jlpt: 'N4', grade: '3' },
+'多': { reading: { kana: 'タ / おお', romaji: 'TA / oo' }, meaning: {jp: 'おおい', en: 'Many, Much'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'正': { reading: { kana: 'セイ, ショウ / ただ', romaji: 'SEI, SHOU / tada' }, meaning: {jp: 'ただしい', en: 'Correct, Right'}, strokesCount: 5, jlpt: 'N4', grade: '1' },
+'安': { reading: { kana: 'アン / やす', romaji: 'AN / yasu' }, meaning: {jp: 'やすい', en: 'Cheap, Safe'}, strokesCount: 6, jlpt: 'N4', grade: '4' },
+'院': { reading: { kana: 'イン', romaji: 'IN' }, meaning: {jp: 'びょういん', en: 'Institution, Hospital'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'心': { reading: { kana: 'シン / こころ', romaji: 'SHIN / kokoro' }, meaning: {jp: 'こころ', en: 'Heart, Mind'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'界': { reading: { kana: 'カイ', romaji: 'KAI' }, meaning: {jp: 'せかい', en: 'World'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'教': { reading: { kana: 'キョウ / おし', romaji: 'KYOU / oshi' }, meaning: {jp: 'おしえる', en: 'To teach'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'元': { reading: { kana: 'ゲン, ガン / もと', romaji: 'GEN, GAN / moto' }, meaning: {jp: 'げんき', en: 'Origin, Healthy'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'重': { reading: { kana: 'ジュウ / おも, かさ', romaji: 'JUU / omo, kasa' }, meaning: {jp: 'おもい', en: 'Heavy, To pile up'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'近': { reading: { kana: 'キン / ちか', romaji: 'KIN / chika' }, meaning: {jp: 'ちかい', en: 'Near, Close'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'考': { reading: { kana: 'コウ / かんが', romaji: 'KOU / kanga' }, meaning: {jp: 'かんがえる', en: 'To think, To consider'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'画': { reading: { kana: 'ガ, カク', romaji: 'GA, KAKU' }, meaning: {jp: 'えいが', en: 'Picture, Plan'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'海': { reading: { kana: 'カイ / うみ', romaji: 'KAI / umi' }, meaning: {jp: 'うみ', en: 'Sea, Ocean'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'売': { reading: { kana: 'バイ / う', romaji: 'BAI / u' }, meaning: {jp: 'うる', en: 'To sell'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'知': { reading: { kana: 'チ / し', romaji: 'CHI / shi' }, meaning: {jp: 'しる', en: 'To know'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'道': { reading: { kana: 'ドウ / みち', romaji: 'DOU / michi' }, meaning: {jp: 'みち', en: 'Road, Way'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'集': { reading: { kana: 'シュウ / あつ', romaji: 'SHUU / atsu' }, meaning: {jp: 'あつめる', en: 'To gather'}, strokesCount: 12, jlpt: 'N4', grade: '3' },
+'別': { reading: { kana: 'ベツ / わか', romaji: 'BETSU / waka' }, meaning: {jp: 'わかれる', en: 'To separate, Another'}, strokesCount: 7, jlpt: 'N4', grade: 'S' },
+'物': { reading: { kana: 'ブツ, モツ / もの', romaji: 'BUTSU, MOTSU / mono' }, meaning: {jp: 'もの', en: 'Thing'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'使': { reading: { kana: 'シ / つか', romaji: 'SHI / tsuka' }, meaning: {jp: 'つかう', en: 'To use'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'品': { reading: { kana: 'ヒン / しな', romaji: 'HIN / shina' }, meaning: {jp: 'しなもの', en: 'Goods, Article'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'計': { reading: { kana: 'ケイ / はか', romaji: 'KEI / haka' }, meaning: {jp: 'とけい', en: 'To measure, Plan'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'死': { reading: { kana: 'シ / し', romaji: 'SHI / shi' }, meaning: {jp: 'しぬ', en: 'To die, Death'}, strokesCount: 6, jlpt: 'N4', grade: '3' },
+'特': { reading: { kana: 'トク', romaji: 'TOKU' }, meaning: {jp: 'とくべつ', en: 'Special'}, strokesCount: 10, jlpt: 'N4', grade: '4' },
+'私': { reading: { kana: 'シ / わたし', romaji: 'SHI / watashi' }, meaning: {jp: 'わたし', en: 'I, private'}, strokesCount: 7, jlpt: 'N4', grade: '3' },
+'始': { reading: { kana: 'シ / はじ', romaji: 'SHI / haji' }, meaning: {jp: 'はじめる', en: 'To begin'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'朝': { reading: { kana: 'チョウ / あさ', romaji: 'CHOU / asa' }, meaning: {jp: 'あさ', en: 'Morning'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'運': { reading: { kana: 'ウン / はこ', romaji: 'UN / hako' }, meaning: {jp: 'はこぶ', en: 'To carry, Fortune, Luck'}, strokesCount: 12, jlpt: 'N4', grade: '3' },
+'終': { reading: { kana: 'シュウ / お', romaji: 'SHUU / o' }, meaning: {jp: 'おわる', en: 'To end, Finish'}, strokesCount: 11, jlpt: 'N4', grade: '3' },
+'台': { reading: { kana: 'ダイ, タイ', romaji: 'DAI, TAI' }, meaning: {jp: 'だいどころ', en: 'Stand,台 (counter for machines)'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'広': { reading: { kana: 'コウ / ひろ', romaji: 'KOU / hiro' }, meaning: {jp: 'ひろい', en: 'Wide, Spacious'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'住': { reading: { kana: 'ジュウ / す', romaji: 'JUU / su' }, meaning: {jp: 'すむ', en: 'To live, To reside'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'無': { reading: { kana: 'ム / な', romaji: 'MU / na' }, meaning: {jp: 'ない', en: 'Nothing, Not'}, strokesCount: 12, jlpt: 'N4', grade: '4' },
+'真': { reading: { kana: 'シン / ま', romaji: 'SHIN / ma' }, meaning: {jp: 'しゃしん', en: 'True, Reality'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'有': { reading: { kana: 'ユウ / あ', romaji: 'YUU / a' }, meaning: {jp: 'ある', en: 'To exist, To have'}, strokesCount: 6, jlpt: 'N4', grade: '3' },
+'口': { reading: { kana: 'コウ / くち', romaji: 'KOU / kuchi' }, meaning: {jp: 'くち', en: 'Mouth'}, strokesCount: 3, jlpt: 'N4', grade: '1' },
+'少': { reading: { kana: 'ショウ / すく, すこ', romaji: 'SHOU / suku, suko' }, meaning: {jp: 'すくない', en: 'Few, a little'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'町': { reading: { kana: 'チョウ / まち', romaji: 'CHOU / machi' }, meaning: {jp: 'まち', en: 'Town'}, strokesCount: 7, jlpt: 'N4', grade: '1' },
+'料': { reading: { kana: 'リョウ', romaji: 'RYOU' }, meaning: {jp: 'りょうり', en: 'Fee, Materials'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'工': { reading: { kana: 'コウ, ク', romaji: 'KOU, KU' }, meaning: {jp: 'こうじょう', en: 'Craft, Construction'}, strokesCount: 3, jlpt: 'N4', grade: '2' },
+'建': { reading: { kana: 'ケン / た', romaji: 'KEN / ta' }, meaning: {jp: 'たてる', en: 'To build'}, strokesCount: 9, jlpt: 'N4', grade: '4' },
+'空': { reading: { kana: 'クウ / そら, あ', romaji: 'KUU / sora, a' }, meaning: {jp: 'そら', en: 'Sky, Empty'}, strokesCount: 8, jlpt: 'N4', grade: '1' },
+'急': { reading: { kana: 'キュウ / いそ', romaji: 'KYUU / iso' }, meaning: {jp: 'いそぐ', en: 'To hurry, Urgent'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'止': { reading: { kana: 'シ / と', romaji: 'SHI / to' }, meaning: {jp: 'とまる', en: 'To stop'}, strokesCount: 4, jlpt: 'N4', grade: '1' },
+'送': { reading: { kana: 'ソウ / おく', romaji: 'SOU / oku' }, meaning: {jp: 'おくる', en: 'To send'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'切': { reading: { kana: 'セツ / き', romaji: 'SETSU / ki' }, meaning: {jp: 'きる', en: 'To cut'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'転': { reading: { kana: 'テン / ころ', romaji: 'TEN / koro' }, meaning: {jp: 'うんてん', en: 'To roll, To turn'}, strokesCount: 11, jlpt: 'N4', grade: '3' },
+'研': { reading: { kana: 'ケン', romaji: 'KEN' }, meaning: {jp: 'けんきゅう', en: 'To research, To sharpen'}, strokesCount: 9, jlpt: 'N4', grade: '4' },
+'究': { reading: { kana: 'キュウ', romaji: 'KYUU' }, meaning: {jp: 'けんきゅう', en: 'To investigate'}, strokesCount: 7, jlpt: 'N4', grade: '3' },
+'足': { reading: { kana: 'ソク / あし, た', romaji: 'SOKU / ashi, ta' }, meaning: {jp: 'あし', en: 'Leg, Foot, To be enough'}, strokesCount: 7, jlpt: 'N4', grade: '1' },
+'起': { reading: { kana: 'キ / お', romaji: 'KI / o' }, meaning: {jp: 'おきる', en: 'To get up, To happen'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'着': { reading: { kana: 'チャク / き, つ', romaji: 'CHAKU / ki, tsu' }, meaning: {jp: 'きる, つく', en: 'To wear, To arrive'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'店': { reading: { kana: 'テン / みせ', romaji: 'TEN / mise' }, meaning: {jp: 'みせ', en: 'Shop'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'病': { reading: { kana: 'ビョウ / や', romaji: 'BYOU / ya' }, meaning: {jp: 'びょうき', en: 'Sick, Illness'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'質': { reading: { kana: 'シツ', romaji: 'SHITSU' }, meaning: {jp: 'しつもん', en: 'Quality, Question'}, strokesCount: 15, jlpt: 'N4', grade: 'S' },
+'待': { reading: { kana: 'タイ / ま', romaji: 'TAI / ma' }, meaning: {jp: 'まつ', en: 'To wait'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'試': { reading: { kana: 'シ / ため', romaji: 'SHI / tame' }, meaning: {jp: 'ためす', en: 'To try, Test'}, strokesCount: 13, jlpt: 'N4', grade: 'S' },
+'族': { reading: { kana: 'ゾク', romaji: 'ZOKU' }, meaning: {jp: 'かぞく', en: 'Family, Tribe'}, strokesCount: 11, jlpt: 'N4', grade: '4' },
+'銀': { reading: { kana: 'ギン', romaji: 'GIN' }, meaning: {jp: 'ぎんこう', en: 'Silver'}, strokesCount: 14, jlpt: 'N4', grade: '4' },
+'早': { reading: { kana: 'ソウ / はや', romaji: 'SOU / haya' }, meaning: {jp: 'はやい', en: 'Early, Fast'}, strokesCount: 6, jlpt: 'N4', grade: '1' },
+'映': { reading: { kana: 'エイ / うつ', romaji: 'EI / utsu' }, meaning: {jp: 'えいが', en: 'To project, To reflect'}, strokesCount: 9, jlpt: 'N4', grade: 'S' },
+'親': { reading: { kana: 'シン / おや, した', romaji: 'SHIN / oya, shita' }, meaning: {jp: 'おや', en: 'Parent, Intimate'}, strokesCount: 16, jlpt: 'N4', grade: '2' },
+'験': { reading: { kana: 'ケン', romaji: 'KEN' }, meaning: {jp: 'しけん', en: 'To test, To examine'}, strokesCount: 18, jlpt: 'N4', grade: 'S' },
+'英': { reading: { kana: 'エイ', romaji: 'EI' }, meaning: {jp: 'えいご', en: 'England, English'}, strokesCount: 8, jlpt: 'N4', grade: '4' },
+'医': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いしゃ', en: 'Medicine, Doctor'}, strokesCount: 7, jlpt: 'N4', grade: '3' },
+'仕': { reading: { kana: 'シ', romaji: 'SHI' }, meaning: {jp: 'しごと', en: 'To serve, To do'}, strokesCount: 5, jlpt: 'N4', grade: 'S' },
+'去': { reading: { kana: 'キョ, コ / さ', romaji: 'KYO, KO / sa' }, meaning: {jp: 'さる', en: 'To leave, To go away'}, strokesCount: 5, jlpt: 'N4', grade: '3' },
+'味': { reading: { kana: 'ミ / あじ', romaji: 'MI / aji' }, meaning: {jp: 'あじ', en: 'Taste'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'写': { reading: { kana: 'シャ / うつ', romaji: 'SHA / utsu' }, meaning: {jp: 'うつす', en: 'To copy, To photograph'}, strokesCount: 5, jlpt: 'N4', grade: '3' },
+'図': { reading: { kana: 'ズ, ト', romaji: 'ZU, TO' }, meaning: {jp: 'ちず', en: 'Drawing, Diagram'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'館': { reading: { kana: 'カン', romaji: 'KAN' }, meaning: {jp: 'としょかん', en: 'Building, Hall'}, strokesCount: 16, jlpt: 'N4', grade: '2' },
+'号': { reading: { kana: 'ゴウ', romaji: 'GOU' }, meaning: {jp: 'ばんごう', en: 'Number, Sign'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'紙': { reading: { kana: 'シ / かみ', romaji: 'SHI / kami' }, meaning: {jp: 'てがみ', en: 'Paper'}, strokesCount: 10, jlpt: 'N4', grade: '2' },
+'寺': { reading: { kana: 'ジ / てら', romaji: 'JI / tera' }, meaning: {jp: 'てら', en: 'Temple'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'通': { reading: { kana: 'ツウ / とお', romaji: 'TSUU / too' }, meaning: {jp: 'かよう', en: 'To pass, to commute'}, strokesCount: 10, jlpt: 'N4', grade: '2' },
+'楽': { reading: { kana: 'ガク, ラク / たの', romaji: 'GAKU, RAKU / tano' }, meaning: {jp: 'たのしい, おんがく', en: 'Fun, Easy, Music'}, strokesCount: 13, jlpt: 'N4', grade: '2' },
+'特': { reading: { kana: 'トク', romaji: 'TOKU' }, meaning: {jp: 'とっきゅう', en: 'Special'}, strokesCount: 10, jlpt: 'N4', grade: '4' },
+'産': { reading: { kana: 'サン / う', romaji: 'SAN / u' }, meaning: {jp: 'うむ', en: 'To give birth, Produce'}, strokesCount: 11, jlpt: 'N4', grade: '4' },
+'答': { reading: { kana: 'トウ / こた', romaji: 'TOU / kota' }, meaning: {jp: 'こたえる', en: 'To answer, Answer'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'夜': { reading: { kana: 'ヤ / よる', romaji: 'YA / yoru' }, meaning: {jp: 'よる', en: 'Night'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'音': { reading: { kana: 'オン / おと', romaji: 'ON / oto' }, meaning: {jp: 'おと', en: 'Sound'}, strokesCount: 9, jlpt: 'N4', grade: '1' },
+'注': { reading: { kana: 'チュウ / そそ', romaji: 'CHUU / soso' }, meaning: {jp: 'ちゅうい', en: 'To pour, To pay attention'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+'帰': { reading: { kana: 'キ / かえ', romaji: 'KI / kae' }, meaning: {jp: 'かえる', en: 'To return'}, strokesCount: 10, jlpt: 'N4', grade: '2' },
+'古': { reading: { kana: 'コ / ふる', romaji: 'KO / furu' }, meaning: {jp: 'ふるい', en: 'Old'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'歌': { reading: { kana: 'カ / うた', romaji: 'KA / uta' }, meaning: {jp: 'うたう', en: 'To sing, Song'}, strokesCount: 14, jlpt: 'N4', grade: '2' },
+'買': { reading: { kana: 'バイ / か', romaji: 'BAI / ka' }, meaning: {jp: 'かう', en: 'To buy'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'悪': { reading: { kana: 'アク / わる', romaji: 'AKU / waru' }, meaning: {jp: 'わるい', en: 'Bad, Evil'}, strokesCount: 11, jlpt: 'N4', grade: '3' },
+'図': { reading: { kana: 'ズ', romaji: 'ZU' }, meaning: {jp: 'ちず', en: 'Diagram, map'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'週': { reading: { kana: 'シュウ', romaji: 'SHUU' }, meaning: {jp: 'しゅう', en: 'Week'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'室': { reading: { kana: 'シツ', romaji: 'SHITSU' }, meaning: {jp: 'きょうしつ', en: 'Room'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'歩': { reading: { kana: 'ホ / ある', romaji: 'HO / aru' }, meaning: {jp: 'あるく', en: 'To walk'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'風': { reading: { kana: 'フウ / かぜ', romaji: 'FUU / kaze' }, meaning: {jp: 'かぜ', en: 'Wind, Style'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'服': { reading: { kana: 'フク', romaji: 'FUKU' }, meaning: {jp: 'ふく', en: 'Clothes'}, strokesCount: 8, jlpt: 'N4', grade: '4' },
+'飯': { reading: { kana: 'ハン', romaji: 'HAN' }, meaning: {jp: 'ごはん', en: 'Cooked rice, Meal'}, strokesCount: 12, jlpt: 'N4', grade: 'S' },
+'屋': { reading: { kana: 'オク / や', romaji: 'OKU / ya' }, meaning: {jp: 'へや', en: 'Roof, Shop'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'究': { reading: { kana: 'キュウ', romaji: 'KYUU' }, meaning: {jp: 'けんきゅう', en: 'Research'}, strokesCount: 7, jlpt: 'N4', grade: '3' },
+'室': { reading: { kana: 'シツ / むろ', romaji: 'SHITSU / muro' }, meaning: {jp: 'きょうしつ', en: 'Room'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'犬': { reading: { kana: 'ケン / いぬ', romaji: 'KEN / inu' }, meaning: {jp: 'いぬ', en: 'Dog'}, strokesCount: 4, jlpt: 'N4', grade: '1' },
+'鳥': { reading: { kana: 'チョウ / とり', romaji: 'CHOU / tori' }, meaning: {jp: 'とり', en: 'Bird'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'妹': { reading: { kana: 'マイ / いもうと', romaji: 'MAI / imouto' }, meaning: {jp: 'いもうと', en: 'Younger sister'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'兄': { reading: { kana: 'ケイ, キョウ / あに', romaji: 'KEI, KYOU / ani' }, meaning: {jp: 'あに', en: 'Older brother'}, strokesCount: 5, jlpt: 'N4', grade: '2' },
+'姉': { reading: { kana: 'シ / あね', romaji: 'SHI / ane' }, meaning: {jp: 'あね', en: 'Older sister'}, strokesCount: 8, jlpt: 'N4', grade: '2' },
+'弟': { reading: { kana: 'テイ, ダイ / おとうと', romaji: 'TEI, DAI / otouto' }, meaning: {jp: 'おとうと', en: 'Younger brother'}, strokesCount: 7, jlpt: 'N4', grade: '2' },
+'漢': { reading: { kana: 'カン', romaji: 'KAN' }, meaning: {jp: 'かんじ', en: 'China, Han'}, strokesCount: 13, jlpt: 'N4', grade: '3' },
+'字': { reading: { kana: 'ジ', romaji: 'JI' }, meaning: {jp: 'かんじ', en: 'Character, Letter'}, strokesCount: 6, jlpt: 'N4', grade: '1' },
+'貸': { reading: { kana: 'タイ / か', romaji: 'TAI / ka' }, meaning: {jp: 'かす', en: 'To lend'}, strokesCount: 12, jlpt: 'N4', grade: 'S' },
+'借': { reading: { kana: 'シャク / か', romaji: 'SHAKU / ka' }, meaning: {jp: 'かりる', en: 'To borrow'}, strokesCount: 10, jlpt: 'N4', grade: 'S' },
+'習': { reading: { kana: 'シュウ / なら', romaji: 'SHUU / nara' }, meaning: {jp: 'ならう', en: 'To learn'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'勉': { reading: { kana: 'ベン', romaji: 'BEN' }, meaning: {jp: 'べんきょう', en: 'To make an effort'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'強': { reading: { kana: 'キョウ / つよ', romaji: 'KYOU / tsuyo' }, meaning: {jp: 'べんきょう', en: 'Strong'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'旅': { reading: { kana: 'リョ / たび', romaji: 'RYO / tabi' }, meaning: {jp: 'りょこう', en: 'Trip, Travel'}, strokesCount: 10, jlpt: 'N4', grade: '3' },
+'服': { reading: { kana: 'フク', romaji: 'FUKU' }, meaning: {jp: 'ふく', en: 'Clothes'}, strokesCount: 8, jlpt: 'N4', grade: '4' },
+'着': { reading: { kana: 'チャク / き', romaji: 'CHAKU / ki' }, meaning: {jp: 'きる', en: 'to wear'}, strokesCount: 12, jlpt: 'N4', grade: '2' },
+'同': { reading: { kana: 'ドウ / おな', romaji: 'DOU / ona' }, meaning: {jp: 'おなじ', en: 'Same'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'昼': { reading: { kana: 'チュウ / ひる', romaji: 'CHUU / hiru' }, meaning: {jp: 'ひるごはん', en: 'Daytime, Noon'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'茶': { reading: { kana: 'チャ', romaji: 'CHA' }, meaning: {jp: 'おちゃ', en: 'Tea'}, strokesCount: 9, jlpt: 'N4', grade: '2' },
+'牛': { reading: { kana: 'ギュウ / うし', romaji: 'GYUU / ushi' }, meaning: {jp: 'ぎゅうにく', en: 'Cow'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'肉': { reading: { kana: 'ニク', romaji: 'NIKU' }, meaning: {jp: 'ぎゅうにく', en: 'Meat'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'鳥': { reading: { kana: 'チョウ / とり', romaji: 'CHOU / tori' }, meaning: {jp: 'とり', en: 'Bird'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'魚': { reading: { kana: 'ギョ / さかな', romaji: 'GYO / sakana' }, meaning: {jp: 'さかな', en: 'Fish'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'貝': { reading: { kana: 'バイ / かい', romaji: 'BAI / kai' }, meaning: {jp: 'かい', en: 'Shellfish'}, strokesCount: 7, jlpt: 'N4', grade: '1' },
+'花': { reading: { kana: 'カ / はな', romaji: 'KA / hana' }, meaning: {jp: 'はな', en: 'Flower'}, strokesCount: 7, jlpt: 'N4', grade: '1' },
+'様': { reading: { kana: 'ヨウ / さま', romaji: 'YOU / sama' }, meaning: {jp: 'おきゃくさま', en: 'Mr., Mrs., Manner'}, strokesCount: 14, jlpt: 'N4', grade: 'S' },
+'不': { reading: { kana: 'フ, ブ', romaji: 'FU, BU' }, meaning: {jp: 'ふべん', en: 'Not'}, strokesCount: 4, jlpt: 'N4', grade: '4' },
+'便': { reading: { kana: 'ベン, ビン', romaji: 'BEN, BIN' }, meaning: {jp: 'べんり', en: 'Convenient, Mail'}, strokesCount: 9, jlpt: 'N4', grade: '4' },
+'利': { reading: { kana: 'リ', romaji: 'RI' }, meaning: {jp: 'べんり', en: 'Profit, Advantage'}, strokesCount: 7, jlpt: 'N4', grade: '4' },
+'有': { reading: { kana: 'ユウ / あ', romaji: 'YUU / a' }, meaning: {jp: 'ゆうめい', en: 'Exist'}, strokesCount: 6, jlpt: 'N4', grade: '3' },
+'名': { reading: { kana: 'メイ / な', romaji: 'MEI / na' }, meaning: {jp: 'なまえ', en: 'Name'}, strokesCount: 6, jlpt: 'N4', grade: '1' },
+'親': { reading: { kana: 'シン / おや, した', romaji: 'SHIN / oya, shita' }, meaning: {jp: 'しんせつ', en: 'Parent, intimate'}, strokesCount: 16, jlpt: 'N4', grade: '2' },
+'切': { reading: { kana: 'セツ / き', romaji: 'SETSU / ki' }, meaning: {jp: 'しんせつ', en: 'To cut'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'元': { reading: { kana: 'ゲン / もと', romaji: 'GEN / moto' }, meaning: {jp: 'げんき', en: 'Origin'}, strokesCount: 4, jlpt: 'N4', grade: '2' },
+'気': { reading: { kana: 'キ, ケ', romaji: 'KI, KE' }, meaning: {jp: 'げんき', en: 'Spirit, Air, Mood'}, strokesCount: 6, jlpt: 'N4', grade: '1' },
+'好': { reading: { kana: 'コウ / す', romaji: 'KOU / su' }, meaning: {jp: 'すき', en: 'To like'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'遊': { reading: { kana: 'ユウ / あそ', romaji: 'YUU / aso' }, meaning: {jp: 'あそぶ', en: 'To play'}, strokesCount: 12, jlpt: 'N4', grade: '3' },
+'寝': { reading: { kana: 'シン / ね', romaji: 'SHIN / ne' }, meaning: {jp: 'ねる', en: 'To sleep'}, strokesCount: 13, jlpt: 'N4', grade: 'S' },
+'返': { reading: { kana: 'ヘン / かえ', romaji: 'HEN / kae' }, meaning: {jp: 'かえす', en: 'To return something'}, strokesCount: 7, jlpt: 'N4', grade: 'S' },
+'全': { reading: { kana: 'ゼン / まった', romaji: 'ZEN / matta' }, meaning: {jp: 'ぜんぶ', en: 'All, Whole'}, strokesCount: 6, jlpt: 'N4', grade: '3' },
+'部屋': { reading: { kana: 'へや', romaji: 'heya' }, meaning: {jp: 'へや', en: 'Room'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+'薬': { reading: { kana: 'ヤク / くすり', romaji: 'YAKU / kusuri' }, meaning: {jp: 'くすり', en: 'Medicine'}, strokesCount: 16, jlpt: 'N4', grade: '3' },
+'働': { reading: { kana: 'ドウ / はたら', romaji: 'DOU / hatara' }, meaning: {jp: 'はたらく', en: 'To work'}, strokesCount: 13, jlpt: 'N4', grade: 'S' },
+'暗': { reading: { kana: 'アン / くら', romaji: 'AN / kura' }, meaning: {jp: 'くらい', en: 'Dark'}, strokesCount: 13, jlpt: 'N4', grade: '3' },
+'寒': { reading: { kana: 'カン / さむ', romaji: 'KAN / samu' }, meaning: {jp: 'さむい', en: 'Cold (weather)'}, strokesCount: 12, jlpt: 'N4', grade: 'S' },
+'暑': { reading: { kana: 'ショ / あつ', romaji: 'SHO / atsu' }, meaning: {jp: 'あつい', en: 'Hot (weather)'}, strokesCount: 12, jlpt: 'N4', grade: '3' },
+'低': { reading: { kana: 'テイ / ひく', romaji: 'TEI / hiku' }, meaning: {jp: 'ひくい', en: 'Low'}, strokesCount: 7, jlpt: 'N4', grade: '4' },
+'赤': { reading: { kana: 'セキ / あか', romaji: 'SEKI / aka' }, meaning: {jp: 'あかい', en: 'Red'}, strokesCount: 7, jlpt: 'N4', grade: '1' },
+'青': { reading: { kana: 'セイ / あお', romaji: 'SEI / ao' }, meaning: {jp: 'あおい', en: 'Blue'}, strokesCount: 8, jlpt: 'N4', grade: '1' },
+'黒': { reading: { kana: 'コク / くろ', romaji: 'KOKU / kuro' }, meaning: {jp: 'くろい', en: 'Black'}, strokesCount: 11, jlpt: 'N4', grade: '2' },
+'色': { reading: { kana: 'ショク / いろ', romaji: 'SHOKU / iro' }, meaning: {jp: 'いろ', en: 'Color'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+'静': { reading: { kana: 'セイ / しず', romaji: 'SEI / shizu' }, meaning: {jp: 'しずか', en: 'Quiet'}, strokesCount: 14, jlpt: 'N4', grade: '4' },
+'洗': { reading: { kana: 'セン / あら', romaji: 'SEN / ara' }, meaning: {jp: 'あらう', en: 'To wash'}, strokesCount: 9, jlpt: 'N4', grade: 'S' },
+'洋': { reading: { kana: 'ヨウ', romaji: 'YOU' }, meaning: {jp: 'ようふく', en: 'Western, Ocean'}, strokesCount: 9, jlpt: 'N4', grade: '3' },
+// N3 Samples
+            // JLPT N3 (~370 Kanji)
+'悪': { reading: { kana: 'アク, オ / わる', romaji: 'AKU, O / waru' }, meaning: {jp: 'わるい', en: 'Bad, Evil, Wrong'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'安': { reading: { kana: 'アン / やす', romaji: 'AN / yasu' }, meaning: {jp: 'あんしん', en: 'Safe, Relief, Cheap'}, strokesCount: 6, jlpt: 'N3', grade: '4' },
+'暗': { reading: { kana: 'アン / くら', romaji: 'AN / kura' }, meaning: {jp: 'くらい', en: 'Dark, Gloomy'}, strokesCount: 13, jlpt: 'N3', grade: '3' },
+'医': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いしゃ', en: 'Medicine, Doctor'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'委': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いいんかい', en: 'Committee, Entrust'}, strokesCount: 8, jlpt: 'N3', grade: 'S' },
+'意': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: 'いみ', en: 'Idea, Mind, Meaning'}, strokesCount: 13, jlpt: 'N3', grade: '3' },
+'育': { reading: { kana: 'イク / そだ', romaji: 'IKU / soda' }, meaning: {jp: 'そだてる', en: 'To raise, To bring up'}, strokesCount: 8, jlpt: 'N3', grade: '4' },
+'員': { reading: { kana: 'イン', romaji: 'IN' }, meaning: {jp: 'かいいん', en: 'Member'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'院': { reading: { kana: 'イン', romaji: 'IN' }, meaning: {jp: 'びょういん', en: 'Institution, Hospital'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'飲': { reading: { kana: 'イン / の', romaji: 'IN / no' }, meaning: {jp: 'のむ', en: 'To drink'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'運': { reading: { kana: 'ウン / はこ', romaji: 'UN / hako' }, meaning: {jp: 'うんてん', en: 'Carry, Luck, Transport'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'泳': { reading: { kana: 'エイ / およ', romaji: 'EI / oyo' }, meaning: {jp: 'およぐ', en: 'To swim'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'駅': { reading: { kana: 'エキ', romaji: 'EKI' }, meaning: {jp: 'えき', en: 'Station'}, strokesCount: 14, jlpt: 'N3', grade: '3' },
+'央': { reading: { kana: 'オウ', romaji: 'OU' }, meaning: {jp: 'ちゅうおう', en: 'Center'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'横': { reading: { kana: 'オウ / よこ', romaji: 'OU / yoko' }, meaning: {jp: 'よこ', en: 'Side, Horizontal'}, strokesCount: 15, jlpt: 'N3', grade: '3' },
+'屋': { reading: { kana: 'オク / や', romaji: 'OKU / ya' }, meaning: {jp: 'へや', en: 'Roof, Shop'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'温': { reading: { kana: 'オン / あたた', romaji: 'ON / atata' }, meaning: {jp: 'あたたかい', en: 'Warm'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'化': { reading: { kana: 'カ, ケ', romaji: 'KA, KE' }, meaning: {jp: 'ぶんか', en: 'Change, 化 (suffix for -ization)'}, strokesCount: 4, jlpt: 'N3', grade: '3' },
+'荷': { reading: { kana: 'カ / に', romaji: 'KA / ni' }, meaning: {jp: 'にもつ', en: 'Baggage, Load'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'界': { reading: { kana: 'カイ', romaji: 'KAI' }, meaning: {jp: 'せかい', en: 'World, Boundary'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'開': { reading: { kana: 'カイ / あ, ひら', romaji: 'KAI / a, hira' }, meaning: {jp: 'あける', en: 'To open'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'階': { reading: { kana: 'カイ', romaji: 'KAI' }, meaning: {jp: 'かいだん', en: 'Floor, Stairs'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'寒': { reading: { kana: 'カン / さむ', romaji: 'KAN / samu' }, meaning: {jp: 'さむい', en: 'Cold'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'感': { reading: { kana: 'カン', romaji: 'KAN' }, meaning: {jp: 'かんじる', en: 'Feeling, Sensation'}, strokesCount: 13, jlpt: 'N3', grade: 'S' },
+'漢': { reading: { kana: 'カン', romaji: 'KAN' }, meaning: {jp: 'かんじ', en: 'China, Han'}, strokesCount: 13, jlpt: 'N3', grade: '3' },
+'館': { reading: { kana: 'カン', romaji: 'KAN' }, meaning: {jp: 'としょかん', en: 'Building, Hall'}, strokesCount: 16, jlpt: 'N3', grade: '2' },
+'岸': { reading: { kana: 'ガン / きし', romaji: 'GAN / kishi' }, meaning: {jp: 'きし', en: 'Coast, Shore'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'起': { reading: { kana: 'キ / お', romaji: 'KI / o' }, meaning: {jp: 'おきる', en: 'To get up'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'期': { reading: { kana: 'キ, ゴ', romaji: 'KI, GO' }, meaning: {jp: 'きかん', en: 'Period, Term'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'客': { reading: { kana: 'キャク', romaji: 'KYAKU' }, meaning: {jp: 'おきゃくさん', en: 'Guest, Customer'}, strokesCount: 9, jlpt: 'N3', grade: '4' },
+'究': { reading: { kana: 'キュウ', romaji: 'KYUU' }, meaning: {jp: 'けんきゅう', en: 'Research'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'急': { reading: { kana: 'キュウ / いそ', romaji: 'KYUU / iso' }, meaning: {jp: 'いそぐ', en: 'Hurry, Emergency'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'級': { reading: { kana: 'キュウ', romaji: 'KYUU' }, meaning: {jp: 'しょうきゅう', en: 'Class, Rank'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'宮': { reading: { kana: 'キュウ, グウ / みや', romaji: 'KYUU, GUU / miya' }, meaning: {jp: 'みや', en: 'Shinto shrine, Prince/Princess'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'球': { reading: { kana: 'キュウ / たま', romaji: 'KYUU / tama' }, meaning: {jp: 'やきゅう', en: 'Ball, Sphere'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'去': { reading: { kana: 'キョ, コ / さ', romaji: 'KYO, KO / sa' }, meaning: {jp: 'さる', en: 'To leave, Past'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'橋': { reading: { kana: 'キョウ / はし', romaji: 'KYOU / hashi' }, meaning: {jp: 'はし', en: 'Bridge'}, strokesCount: 16, jlpt: 'N3', grade: '3' },
+'業': { reading: { kana: 'ギョウ', romaji: 'GYOU' }, meaning: {jp: 'じゅぎょう', en: 'Business, Vocation'}, strokesCount: 13, jlpt: 'N3', grade: '3' },
+'曲': { reading: { kana: 'キョク / ま', romaji: 'KYOKU / ma' }, meaning: {jp: 'きょく', en: 'Tune, Bend'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'局': { reading: { kana: 'キョク', romaji: 'KYOKU' }, meaning: {jp: 'ゆうびんきょく', en: 'Bureau, Office'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'銀': { reading: { kana: 'ギン', romaji: 'GIN' }, meaning: {jp: 'ぎんこう', en: 'Silver'}, strokesCount: 14, jlpt: 'N3', grade: '4' },
+'区': { reading: { kana: 'ク', romaji: 'KU' }, meaning: {jp: 'くべつ', en: 'Ward, District'}, strokesCount: 4, jlpt: 'N3', grade: '3' },
+'苦': { reading: { kana: 'ク / くる, にが', romaji: 'KU / kuru, niga' }, meaning: {jp: 'くるしい', en: 'Suffering, Bitter'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'具': { reading: { kana: 'グ', romaji: 'GU' }, meaning: {jp: 'どうぐ', en: 'Tool, Utensil'}, strokesCount: 8, jlpt: 'N3', grade: '4' },
+'君': { reading: { kana: 'クン / きみ', romaji: 'KUN / kimi' }, meaning: {jp: 'きみ', en: 'You (informal),君 (kun suffix)'}, strokesCount: 7, jlpt: 'N3', grade: 'S' },
+'係': { reading: { kana: 'ケイ / かか', romaji: 'KEI / kaka' }, meaning: {jp: 'かかり', en: 'Person in charge, Connection'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'軽': { reading: { kana: 'ケイ / かる', romaji: 'KEI / karu' }, meaning: {jp: 'かるい', en: 'Light (not heavy)'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'血': { reading: { kana: 'ケツ / ち', romaji: 'KETSU / chi' }, meaning: {jp: 'ち', en: 'Blood'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'決': { reading: { kana: 'ケツ / き', romaji: 'KETSU / ki' }, meaning: {jp: 'きめる', en: 'To decide'}, strokesCount: 7, jlpt: 'N3', grade: '4' },
+'研': { reading: { kana: 'ケン', romaji: 'KEN' }, meaning: {jp: 'けんきゅう', en: 'Research, To sharpen'}, strokesCount: 9, jlpt: 'N3', grade: '4' },
+'県': { reading: { kana: 'ケン', romaji: 'KEN' }, meaning: {jp: 'けん', en: 'Prefecture'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'庫': { reading: { kana: 'コ', romaji: 'KO' }, meaning: {jp: 'れいぞうこ', en: 'Warehouse, Storage'}, strokesCount: 10, jlpt: 'N3', grade: 'S' },
+'湖': { reading: { kana: 'コ / みずうみ', romaji: 'KO / mizuumi' }, meaning: {jp: 'みずうみ', en: 'Lake'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'向': { reading: { kana: 'コウ / む', romaji: 'KOU / mu' }, meaning: {jp: 'むかう', en: 'To face, To go towards'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'幸': { reading: { kana: 'コウ / しあわ', romaji: 'KOU / shiawa' }, meaning: {jp: 'しあわせ', en: 'Happiness, Good fortune'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'港': { reading: { kana: 'コウ / みなと', romaji: 'KOU / minato' }, meaning: {jp: 'みなと', en: 'Harbor'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'号': { reading: { kana: 'ゴウ', romaji: 'GOU' }, meaning: {jp: 'ばんごう', en: 'Number, Sign'}, strokesCount: 5, jlpt: 'N3', grade: '2' },
+'根': { reading: { kana: 'コン / ね', romaji: 'KON / ne' }, meaning: {jp: 'ね', en: 'Root'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'祭': { reading: { kana: 'サイ / まつ', romaji: 'SAI / matsu' }, meaning: {jp: 'まつり', en: 'Festival'}, strokesCount: 11, jlpt: 'N3', grade: 'S' },
+'皿': { reading: { kana: 'さら', romaji: 'sara' }, meaning: {jp: 'さら', en: 'Plate, Dish'}, strokesCount: 5, jlpt: 'N3', grade: 'S' },
+'仕': { reading: { kana: 'シ, ジ', romaji: 'SHI, JI' }, meaning: {jp: 'しごと', en: 'To serve, To do'}, strokesCount: 5, jlpt: 'N3', grade: 'S' },
+'死': { reading: { kana: 'シ / し', romaji: 'SHI / shi' }, meaning: {jp: 'しぬ', en: 'Death, To die'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'使': { reading: { kana: 'シ / つか', romaji: 'SHI / tsuka' }, meaning: {jp: 'つかう', en: 'To use'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'指': { reading: { kana: 'シ / ゆび', romaji: 'SHI / yubi' }, meaning: {jp: 'ゆび', en: 'Finger, To point'}, strokesCount: 9, jlpt: 'N3', grade: '4' },
+'歯': { reading: { kana: 'シ / は', romaji: 'SHI / ha' }, meaning: {jp: 'は', en: 'Tooth'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'詩': { reading: { kana: 'シ', romaji: 'SHI' }, meaning: {jp: 'し', en: 'Poem, Poetry'}, strokesCount: 13, jlpt: 'N3', grade: 'S' },
+'次': { reading: { kana: 'ジ / つぎ', romaji: 'JI / tsugi' }, meaning: {jp: 'つぎ', en: 'Next'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'事': { reading: { kana: 'ジ / こと', romaji: 'JI / koto' }, meaning: {jp: 'しごと', en: 'Thing, Matter, Affair'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'持': { reading: { kana: 'ジ / も', romaji: 'JI / mo' }, meaning: {jp: 'もつ', en: 'To hold'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'式': { reading: { kana: 'シキ', romaji: 'SHIKI' }, meaning: {jp: 'けっこんしき', en: 'Ceremony, Style, Formula'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'実': { reading: { kana: 'ジツ / み', romaji: 'JITSU / mi' }, meaning: {jp: 'じじつ', en: 'Truth, Reality, Fruit'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'写': { reading: { kana: 'シャ / うつ', romaji: 'SHA / utsu' }, meaning: {jp: 'しゃしん', en: 'To copy, To photograph'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'者': { reading: { kana: 'シャ / もの', romaji: 'SHA / mono' }, meaning: {jp: 'いしゃ', en: 'Person'}, strokesCount: 8, jlpt: 'N3', grade: '4' },
+'主': { reading: { kana: 'シュ / ぬし', romaji: 'SHU / nushi' }, meaning: {jp: 'ごしゅじん', en: 'Master, Main'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'守': { reading: { kana: 'シュ, ス / まも', romaji: 'SHU, SU / mamo' }, meaning: {jp: 'まもる', en: 'To protect'}, strokesCount: 6, jlpt: 'N3', grade: 'S' },
+'取': { reading: { kana: 'シュ / と', romaji: 'SHU / to' }, meaning: {jp: 'とる', en: 'To take'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'首': { reading: { kana: 'シュ / くび', romaji: 'SHU / kubi' }, meaning: {jp: 'くび', en: 'Neck'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'酒': { reading: { kana: 'シュ / さけ', romaji: 'SHU / sake' }, meaning: {jp: 'さけ', en: 'Alcohol, Sake'}, strokesCount: 10, jlpt: 'N3', grade: 'S' },
+'受': { reading: { kana: 'ジュ / う', romaji: 'JU / u' }, meaning: {jp: 'うける', en: 'To receive'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'州': { reading: { kana: 'シュウ', romaji: 'SHUU' }, meaning: {jp: 'ほんしゅう', en: 'State, Province'}, strokesCount: 6, jlpt: 'N3', grade: 'S' },
+'拾': { reading: { kana: 'シュウ / ひろ', romaji: 'SHUU / hiro' }, meaning: {jp: 'ひろう', en: 'To pick up'}, strokesCount: 9, jlpt: 'N3', grade: 'S' },
+'終': { reading: { kana: 'シュウ / お', romaji: 'SHUU / o' }, meaning: {jp: 'おわる', en: 'To end, Finish'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'習': { reading: { kana: 'シュウ / なら', romaji: 'SHUU / nara' }, meaning: {jp: 'ならう', en: 'To learn'}, strokesCount: 11, jlpt: 'N3', grade: '2' },
+'集': { reading: { kana: 'シュウ / あつ', romaji: 'SHUU / atsu' }, meaning: {jp: 'あつめる', en: 'To gather'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'住': { reading: { kana: 'ジュウ / す', romaji: 'JUU / su' }, meaning: {jp: 'すむ', en: 'To live, To reside'}, strokesCount: 7, jlpt: 'N3', grade: '2' },
+'重': { reading: { kana: 'ジュウ, チョウ / おも', romaji: 'JUU, CHOU / omo' }, meaning: {jp: 'おもい', en: 'Heavy, Important'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'宿': { reading: { kana: 'シュク / やど', romaji: 'SHUKU / yado' }, meaning: {jp: 'しゅくだい', en: 'Inn, To lodge'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'所': { reading: { kana: 'ショ / ところ', romaji: 'SHO / tokoro' }, meaning: {jp: 'ばしょ', en: 'Place'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'暑': { reading: { kana: 'ショ / あつ', romaji: 'SHO / atsu' }, meaning: {jp: 'あつい', en: 'Hot (weather)'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'助': { reading: { kana: 'ジョ / たす', romaji: 'JO / tasu' }, meaning: {jp: 'たすける', en: 'To help'}, strokesCount: 7, jlpt: 'N3', grade: 'S' },
+'昭': { reading: { kana: 'ショウ', romaji: 'SHOU' }, meaning: {jp: 'しょうわ', en: 'Shining, Bright'}, strokesCount: 9, jlpt: 'N3', grade: 'S' },
+'消': { reading: { kana: 'ショウ / き, け', romaji: 'SHOU / ki, ke' }, meaning: {jp: 'けす', en: 'To erase, To extinguish'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'商': { reading: { kana: 'ショウ', romaji: 'SHOU' }, meaning: {jp: 'しょうばい', en: 'Commerce, Trade'}, strokesCount: 11, jlpt: 'N3', grade: '4' },
+'章': { reading: { kana: 'ショウ', romaji: 'SHOU' }, meaning: {jp: 'ぶんしょう', en: 'Chapter, Badge'}, strokesCount: 11, jlpt: 'N3', grade: '4' },
+'勝': { reading: { kana: 'ショウ / か', romaji: 'SHOU / ka' }, meaning: {jp: 'かつ', en: 'To win'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'乗': { reading: { kana: 'ジョウ / の', romaji: 'JOU / no' }, meaning: {jp: 'のる', en: 'To ride'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'植': { reading: { kana: 'ショク / う', romaji: 'SHOKU / u' }, meaning: {jp: 'うえる', en: 'To plant'}, strokesCount: 12, jlpt: 'N3', grade: '4' },
+'申': { reading: { kana: 'シン / もう', romaji: 'SHIN / mou' }, meaning: {jp: 'もうす', en: 'To say (humble)'}, strokesCount: 5, jlpt: 'N3', grade: 'S' },
+'身': { reading: { kana: 'シン / み', romaji: 'SHIN / mi' }, meaning: {jp: 'しんたい', en: 'Body'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'神': { reading: { kana: 'シン, ジン / かみ', romaji: 'SHIN, JIN / kami' }, meaning: {jp: 'かみさま', en: 'God, Spirit'}, strokesCount: 9, jlpt: 'N3', grade: 'S' },
+'真': { reading: { kana: 'シン / ま', romaji: 'SHIN / ma' }, meaning: {jp: 'しゃしん', en: 'True, Reality'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'深': { reading: { kana: 'シン / ふか', romaji: 'SHIN / fuka' }, meaning: {jp: 'ふかい', en: 'Deep'}, strokesCount: 11, jlpt: 'N3', grade: 'S' },
+'進': { reading: { kana: 'シン / すす', romaji: 'SHIN / susu' }, meaning: {jp: 'すすむ', en: 'To advance, To proceed'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'世': { reading: { kana: 'セイ, セ / よ', romaji: 'SEI, SE / yo' }, meaning: {jp: 'せかい', en: 'World, Generation'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'整': { reading: { kana: 'セイ / ととの', romaji: 'SEI / totono' }, meaning: {jp: 'せいり', en: 'To arrange, To organize'}, strokesCount: 16, jlpt: 'N3', grade: 'S' },
+'昔': { reading: { kana: 'セキ / むかし', romaji: 'SEKI / mukashi' }, meaning: {jp: 'むかし', en: 'Old times, Ancient'}, strokesCount: 8, jlpt: 'N3', grade: 'S' },
+'全': { reading: { kana: 'ゼン / まった', romaji: 'ZEN / matta' }, meaning: {jp: 'ぜんぶ', en: 'All, Whole'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'相': { reading: { kana: 'ソウ, ショウ / あい', romaji: 'SOU, SHOU / ai' }, meaning: {jp: 'そうだん', en: 'Mutual, Phase, Minister'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'送': { reading: { kana: 'ソウ / おく', romaji: 'SOU / oku' }, meaning: {jp: 'おくる', en: 'To send'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'想': { reading: { kana: 'ソウ', romaji: 'SOU' }, meaning: {jp: 'よそう', en: 'Concept, To think'}, strokesCount: 13, jlpt: 'N3', grade: 'S' },
+'息': { reading: { kana: 'ソク / いき', romaji: 'SOKU / iki' }, meaning: {jp: 'いき', en: 'Breath, Son'}, strokesCount: 10, jlpt: 'N3', grade: '4' },
+'速': { reading: { kana: 'ソク / はや', romaji: 'SOKU / haya' }, meaning: {jp: 'はやい', en: 'Fast, Quick'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'族': { reading: { kana: 'ゾク', romaji: 'ZOKU' }, meaning: {jp: 'かぞく', en: 'Family, Tribe'}, strokesCount: 11, jlpt: 'N3', grade: '4' },
+'他': { reading: { kana: 'タ / ほか', romaji: 'TA / hoka' }, meaning: {jp: 'ほか', en: 'Other'}, strokesCount: 5, jlpt: 'N3', grade: 'S' },
+'打': { reading: { kana: 'ダ / う', romaji: 'DA / u' }, meaning: {jp: 'うつ', en: 'To hit, To strike'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'対': { reading: { kana: 'タイ, ツイ', romaji: 'TAI, TSUI' }, meaning: {jp: 'ぜったい', en: 'Opposite, Versus'}, strokesCount: 7, jlpt: 'N3', grade: '4' },
+'待': { reading: { kana: 'タイ / ま', romaji: 'TAI / ma' }, meaning: {jp: 'まつ', en: 'To wait'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'貸': { reading: { kana: 'タイ / か', romaji: 'TAI / ka' }, meaning: {jp: 'かす', en: 'To lend'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'退': { reading: { kana: 'タイ', romaji: 'TAI' }, meaning: {jp: 'たいいん', en: 'To retreat, To withdraw'}, strokesCount: 9, jlpt: 'N3', grade: 'S' },
+'逮': { reading: { kana: 'タイ', romaji: 'TAI' }, meaning: {jp: 'たいほ', en: 'To arrest'}, strokesCount: 11, jlpt: 'N3', grade: 'S' },
+'第': { reading: { kana: 'ダイ', romaji: 'DAI' }, meaning: {jp: 'だいいち', en: 'Number, Prefix for order'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'題': { reading: { kana: 'ダイ', romaji: 'DAI' }, meaning: {jp: 'もんだい', en: 'Topic, Subject'}, strokesCount: 18, jlpt: 'N3', grade: '3' },
+'達': { reading: { kana: 'タツ', romaji: 'TATSU' }, meaning: {jp: 'ともだち', en: 'To reach, Plural suffix'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'単': { reading: { kana: 'タン', romaji: 'TAN' }, meaning: {jp: 'かんたん', en: 'Simple, One'}, strokesCount: 12, jlpt: 'N3', grade: '4' },
+'談': { reading: { kana: 'ダン', romaji: 'DAN' }, meaning: {jp: 'そうだん', en: 'To discuss, Talk'}, strokesCount: 15, jlpt: 'N3', grade: 'S' },
+'値': { reading: { kana: 'チ / ね', romaji: 'CHI / ne' }, meaning: {jp: 'ねだん', en: 'Price, Value'}, strokesCount: 10, jlpt: 'N3', grade: 'S' },
+'知': { reading: { kana: 'チ / し', romaji: 'CHI / shi' }, meaning: {jp: 'しる', en: 'To know'}, strokesCount: 8, jlpt: 'N3', grade: '2' },
+'地': { reading: { kana: 'チ, ジ', romaji: 'CHI, JI' }, meaning: {jp: 'ちず', en: 'Ground, Earth'}, strokesCount: 6, jlpt: 'N3', grade: '2' },
+'池': { reading: { kana: 'チ / いけ', romaji: 'CHI / ike' }, meaning: {jp: 'いけ', en: 'Pond'}, strokesCount: 6, jlpt: 'N3', grade: '2' },
+'茶': { reading: { kana: 'チャ, サ', romaji: 'CHA, SA' }, meaning: {jp: 'おちゃ', en: 'Tea'}, strokesCount: 9, jlpt: 'N3', grade: '2' },
+'着': { reading: { kana: 'チャク / き, つ', romaji: 'CHAKU / ki, tsu' }, meaning: {jp: 'きる', en: 'To wear, To arrive'}, strokesCount: 12, jlpt: 'N3', grade: '2' },
+'湯': { reading: { kana: 'トウ / ゆ', romaji: 'TOU / yu' }, meaning: {jp: 'おゆ', en: 'Hot water'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'登': { reading: { kana: 'トウ, ト / のぼ', romaji: 'TOU, TO / nobo' }, meaning: {jp: 'のぼる', en: 'To climb'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'然': { reading: { kana: 'ゼン, ネン', romaji: 'ZEN, NEN' }, meaning: {jp: 'ぜんぜん', en: 'Sort of thing, So'}, strokesCount: 12, jlpt: 'N3', grade: '4' },
+'練': { reading: { kana: 'レン / ね', romaji: 'REN / ne' }, meaning: {jp: 'れんしゅう', en: 'To practice'}, strokesCount: 14, jlpt: 'N3', grade: 'S' },
+'熱': { reading: { kana: 'ネツ / あつ', romaji: 'NETSU / atsu' }, meaning: {jp: 'あつい', en: 'Heat, Fever'}, strokesCount: 15, jlpt: 'N3', grade: 'S' },
+'配': { reading: { kana: 'ハイ / くば', romaji: 'HAI / kuba' }, meaning: {jp: 'しんぱい', en: 'To distribute'}, strokesCount: 10, jlpt: 'N3', grade: '4' },
+'買': { reading: { kana: 'バイ / か', romaji: 'BAI / ka' }, meaning: {jp: 'かう', en: 'To buy'}, strokesCount: 12, jlpt: 'N3', grade: '2' },
+'倍': { reading: { kana: 'バイ', romaji: 'BAI' }, meaning: {jp: 'にばい', en: 'Double, ...times'}, strokesCount: 10, jlpt: 'N3', grade: '4' },
+'波': { reading: { kana: 'ハ / なみ', romaji: 'HA / nami' }, meaning: {jp: 'なみ', en: 'Wave'}, strokesCount: 8, jlpt: 'N3', grade: 'S' },
+'畑': { reading: { kana: 'はたけ', romaji: 'hatake' }, meaning: {jp: 'はたけ', en: 'Cultivated field'}, strokesCount: 9, jlpt: 'N3', grade: 'S' },
+'発': { reading: { kana: 'ハツ, ホツ', romaji: 'HATSU, HOTSU' }, meaning: {jp: 'しゅっぱつ', en: 'To start, To depart'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'反': { reading: { kana: 'ハン', romaji: 'HAN' }, meaning: {jp: 'はんたい', en: 'Anti-, Opposite'}, strokesCount: 4, jlpt: 'N3', grade: '4' },
+'坂': { reading: { kana: 'ハン / さか', romaji: 'HAN / saka' }, meaning: {jp: 'さか', en: 'Slope, Hill'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'板': { reading: { kana: 'ハン, バン / いた', romaji: 'HAN, BAN / ita' }, meaning: {jp: 'いた', en: 'Board, Plate'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'悲': { reading: { kana: 'ヒ / かな', romaji: 'HI / kana' }, meaning: {jp: 'かなしい', en: 'Sad'}, strokesCount: 12, jlpt: 'N3', grade: 'S' },
+'美': { reading: { kana: 'ビ / うつく', romaji: 'BI / utsuku' }, meaning: {jp: 'うつくしい', en: 'Beautiful'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'鼻': { reading: { kana: 'ビ / はな', romaji: 'BI / hana' }, meaning: {jp: 'はな', en: 'Nose'}, strokesCount: 14, jlpt: 'N3', grade: '3' },
+'必': { reading: { kana: 'ヒツ / かなら', romaji: 'HITSU / kanara' }, meaning: {jp: 'かならず', en: 'Certain, Inevitable'}, strokesCount: 5, jlpt: 'N3', grade: '4' },
+'氷': { reading: { kana: 'ヒョウ / こおり', romaji: 'HYOU / koori' }, meaning: {jp: 'こおり', en: 'Ice'}, strokesCount: 5, jlpt: 'N3', grade: '4' },
+'秒': { reading: { kana: 'ビョウ', romaji: 'BYOU' }, meaning: {jp: 'びょう', en: 'Second (unit of time)'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'病': { reading: { kana: 'ビョウ / やまい', romaji: 'BYOU / yamai' }, meaning: {jp: 'びょうき', en: 'Sick, Illness'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'品': { reading: { kana: 'ヒン / しな', romaji: 'HIN / shina' }, meaning: {jp: 'しなもの', en: 'Goods, Article'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'負': { reading: { kana: 'フ / ま', romaji: 'FU / ma' }, meaning: {jp: 'まける', en: 'To lose, To be defeated'}, strokesCount: 9, jlpt: 'N3', grade: '4' },
+'部': { reading: { kana: 'ブ', romaji: 'BU' }, meaning: {jp: 'ぜんぶ', en: 'Department, Part'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'服': { reading: { kana: 'フク', romaji: 'FUKU' }, meaning: {jp: 'ふく', en: 'Clothes'}, strokesCount: 8, jlpt: 'N3', grade: '4' },
+'福': { reading: { kana: 'フク', romaji: 'FUKU' }, meaning: {jp: 'しんぷく', en: 'Blessing, Fortune'}, strokesCount: 13, jlpt: 'N3', grade: 'S' },
+'物': { reading: { kana: 'ブツ, モツ / もの', romaji: 'BUTSU, MOTSU / mono' }, meaning: {jp: 'たべもの', en: 'Thing'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'平': { reading: { kana: 'ヘイ, ビョウ / たい', romaji: 'HEI, BYOU / tai' }, meaning: {jp: 'へいわ', en: 'Flat, Peace'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'返': { reading: { kana: 'ヘン / かえ', romaji: 'HEN / kae' }, meaning: {jp: 'かえす', en: 'To return something'}, strokesCount: 7, jlpt: 'N3', grade: 'S' },
+'勉': { reading: { kana: 'ベン', romaji: 'BEN' }, meaning: {jp: 'べんきょう', en: 'To make an effort'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+'放': { reading: { kana: 'ホウ / はな', romaji: 'HOU / hana' }, meaning: {jp: 'ほうそう', en: 'To release, To set free'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'味': { reading: { kana: 'ミ / あじ', romaji: 'MI / aji' }, meaning: {jp: 'あじ', en: 'Taste'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'命': { reading: { kana: 'メイ, ミョウ / いのち', romaji: 'MEI, MYOU / inochi' }, meaning: {jp: 'いのち', en: 'Life, Order, Fate'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'面': { reading: { kana: 'メン', romaji: 'MEN' }, meaning: {jp: 'おもしろい', en: 'Face, Mask'}, strokesCount: 9, jlpt: 'N3', grade: '3' },
+'問': { reading: { kana: 'モン / と', romaji: 'MON / to' }, meaning: {jp: 'しつもん', en: 'Question, Problem'}, strokesCount: 11, jlpt: 'N3', grade: '3' },
+'役': { reading: { kana: 'ヤク, エキ', romaji: 'YAKU, EKI' }, meaning: {jp: 'やくにたつ', en: 'Duty, Service, Role'}, strokesCount: 7, jlpt: 'N3', grade: '3' },
+'薬': { reading: { kana: 'ヤク / くすり', romaji: 'YAKU / kusuri' }, meaning: {jp: 'くすり', en: 'Medicine'}, strokesCount: 16, jlpt: 'N3', grade: '3' },
+'由': { reading: { kana: 'ユ, ユウ / よし', romaji: 'YU, YUU / yoshi' }, meaning: {jp: 'りゆう', en: 'Reason, Wherefore'}, strokesCount: 5, jlpt: 'N3', grade: '3' },
+'油': { reading: { kana: 'ユ / あぶら', romaji: 'YU / abura' }, meaning: {jp: 'あぶら', en: 'Oil'}, strokesCount: 8, jlpt: 'N3', grade: '3' },
+'有': { reading: { kana: 'ユウ / あ', romaji: 'YUU / a' }, meaning: {jp: 'ゆうめい', en: 'To exist, To have'}, strokesCount: 6, jlpt: 'N3', grade: '3' },
+'遊': { reading: { kana: 'ユウ / あそ', romaji: 'YUU / aso' }, meaning: {jp: 'あそぶ', en: 'To play'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'予': { reading: { kana: 'ヨ', romaji: 'YO' }, meaning: {jp: 'よてい', en: 'In advance, beforehand'}, strokesCount: 4, jlpt: 'N3', grade: '3' },
+'様': { reading: { kana: 'ヨウ / さま', romaji: 'YOU / sama' }, meaning: {jp: 'おきゃくさま', en: 'Manner, Mr., Mrs.'}, strokesCount: 14, jlpt: 'N3', grade: 'S' },
+'落': { reading: { kana: 'ラク / お', romaji: 'RAKU / o' }, meaning: {jp: 'おちる', en: 'To fall, To drop'}, strokesCount: 12, jlpt: 'N3', grade: '3' },
+'流': { reading: { kana: 'リュウ / なが', romaji: 'RYUU / naga' }, meaning: {jp: 'ながれる', en: 'To flow, Stream'}, strokesCount: 10, jlpt: 'N3', grade: '3' },
+// N2 Samples
+            '際': { reading: { kana: 'サイ / きわ', romaji: 'SAI / kiwa' }, meaning: {jp: '国際', en: 'Occasion, international'}, strokesCount: 14, jlpt: 'N2', grade: '6' },
+            '係': { reading: { kana: 'ケイ / かかり', romaji: 'KEI / kakari' }, meaning: {jp: '関係', en: 'Connection, relation'}, strokesCount: 9, jlpt: 'N2', grade: '3' },
+            '価': { reading: { kana: 'カ / あたい', romaji: 'KA / atai' }, meaning: {jp: '価格', en: 'Price, value'}, strokesCount: 8, jlpt: 'N2', grade: '5' },
+            // N1 Samples
+            '陛': { reading: { kana: 'ヘイ', romaji: 'HEI' }, meaning: {jp: '陛下', en: 'Your Majesty'}, strokesCount: 10, jlpt: 'N1', grade: 'S' },
+            '彙': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: '語彙', en: 'Vocabulary'}, strokesCount: 13, jlpt: 'N1', grade: 'S' },
+            '茨': { reading: { kana: 'シ / いばら', romaji: 'SHI / ibara' }, meaning: {jp: '茨', en: 'Thorn, briar'}, strokesCount: 9, jlpt: 'N1', grade: 'S' },
+        };
+
+        // --- CANVAS & UI STATE ---
+        let currentKanji = '日';
+        let isDrawing = false, lastX = 0, lastY = 0;
+        let guideVisible = true;
+        let currentLevelKanji = [];
+        let renderedKanjiCount = 0;
+        const KANJI_PER_PAGE = 25;
+
+        // --- CANVAS LOGIC ---
+        const guideCanvas = document.getElementById('guideCanvas');
+        const guideCtx = guideCanvas.getContext('2d');
+        const drawingCanvas = document.getElementById('drawingCanvas');
+        const drawingCtx = drawingCanvas.getContext('2d');
+
+        function initializeCanvas() {
+            drawingCtx.lineWidth = 8;
+            drawingCtx.lineCap = 'round';
+            drawingCtx.strokeStyle = '#e62e1f';
+        }
+        
+        function drawKanjiGuide(kanji) {
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            if (!guideVisible || !kanjiDatabase[kanji]) return;
+            guideCtx.font = "250px 'Noto Serif JP', serif";
+            guideCtx.fillStyle = "rgba(0, 0, 0, 0.15)";
+            guideCtx.textAlign = 'center';
+            guideCtx.textBaseline = 'middle';
+            guideCtx.fillText(kanji, guideCanvas.width / 2, guideCanvas.height / 2 + 15);
+        }
+
+        function clearDrawingCanvas() { drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); }
+        function resetCanvas() { clearDrawingCanvas(); drawKanjiGuide(currentKanji); }
+
+        // --- UI UPDATE LOGIC ---
+        function updateKanjiInfo(kanji) {
+            const data = kanjiDatabase[kanji];
+            if (!data) return;
+
+            const lang = isEnglish ? 'en' : 'jp';
+
+            document.getElementById('kanjiChar').textContent = kanji;
+            document.getElementById('kanjiMeaning').textContent = data.meaning[lang];
+            document.getElementById('kanjiReadingKana').textContent = data.reading.kana;
+            document.getElementById('kanjiReadingRomaji').textContent = data.reading.romaji;
+            document.getElementById('kanjiStrokes').textContent = isEnglish ? `${data.strokesCount} Strokes` : `${data.strokesCount}画`;
+            document.getElementById('kanjiJlpt').textContent = data.jlpt;
+            
+            let gradeText;
+            if (data.grade === 'S') {
+                gradeText = isEnglish ? 'General Use' : '一般';
+            } else {
+                gradeText = isEnglish ? `Grade ${data.grade}` : `小学校${data.grade}年生`;
+            }
+            document.getElementById('kanjiGrade').textContent = gradeText;
+            
+            document.getElementById('practiceChar').textContent = kanji;
+            document.getElementById('practiceStrokes').textContent = data.strokesCount;
+        }
+
+        function setCurrentKanji(kanji) {
+            currentKanji = kanji;
+            updateKanjiInfo(kanji);
+            resetCanvas();
+        }
+
+        // --- JLPT GRID & LOAD MORE LOGIC ---
+        const jlptGrid = document.getElementById('jlpt-kanji-grid');
+        const loadMoreContainer = document.getElementById('load-more-container');
+
+        function renderNextBatch() {
+            const lang = isEnglish ? 'en' : 'jp';
+            const batch = currentLevelKanji.slice(renderedKanjiCount, renderedKanjiCount + KANJI_PER_PAGE);
+
+            batch.forEach(kanji => {
+                const data = kanjiDatabase[kanji];
+                const card = document.createElement('div');
+                card.className = 'kanji-card';
+                card.dataset.kanji = kanji;
+                card.innerHTML = `
+                    <div class="character">${kanji}</div>
+                    <div class="meaning">${data.meaning[lang]}</div>
+                `;
+                jlptGrid.appendChild(card);
+            });
+            renderedKanjiCount += batch.length;
+            addCardClickListeners('#jlpt-kanji-grid .kanji-card:not(.listener-added)');
+            updateLoadMoreButton();
+        }
+        
+        function updateLoadMoreButton() {
+            loadMoreContainer.innerHTML = '';
+            if (renderedKanjiCount < currentLevelKanji.length) {
+                const button = document.createElement('button');
+                button.className = 'btn btn-load-more';
+                button.textContent = isEnglish ? translations.en.loadMore : translations.jp.loadMore;
+                button.addEventListener('click', renderNextBatch);
+                loadMoreContainer.appendChild(button);
+            }
+        }
+        
+        function populateJlptGrid(level) {
+            jlptGrid.innerHTML = '';
+            currentLevelKanji = Object.keys(kanjiDatabase).filter(k => kanjiDatabase[k].jlpt === level);
+            renderedKanjiCount = 0;
+            renderNextBatch();
+        }
+
+        // --- EVENT LISTENERS ---
+        function addCardClickListeners(selector) {
+             document.querySelectorAll(selector).forEach(card => {
+                card.classList.add('listener-added');
+                card.addEventListener('click', function() {
+                    const kanji = this.dataset.kanji;
+                    document.getElementById('kanjiInput').value = kanji;
+                    setCurrentKanji(kanji);
+                    document.querySelector('.tool-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        }
+        
+        document.getElementById('langToggle').addEventListener('click', () => { isEnglish = !isEnglish; updateLanguage(); });
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const kanji = document.getElementById('kanjiInput').value.trim().charAt(0);
+            if (kanji && kanjiDatabase[kanji]) setCurrentKanji(kanji);
+            else alert(isEnglish ? 'Kanji not found.' : '漢字が見つかりません。');
+        });
+        document.getElementById('clearBtn').addEventListener('click', clearDrawingCanvas);
+        document.getElementById('resetBtn').addEventListener('click', resetCanvas);
+        document.getElementById('guideToggle').addEventListener('click', function() {
+            guideVisible = !guideVisible; this.classList.toggle('active');
+            const key = guideVisible ? 'guideLabelShow' : 'guideLabelHide';
+            document.getElementById('guideLabel').textContent = isEnglish ? translations.en[key] : translations.jp[key];
+            drawKanjiGuide(currentKanji);
+        });
+        
+        document.querySelectorAll('.jlpt-tab-btn').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.jlpt-tab-btn').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                populateJlptGrid(tab.dataset.level);
+            });
+        });
+
+        // Drawing events
+        const getMousePos = (c, e) => { const r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * c.width, y: (e.clientY - r.top) / r.height * c.height }; };
+        const startDrawing = (e) => { e.preventDefault(); isDrawing = true; const p = getMousePos(drawingCanvas, e.touches ? e.touches[0] : e); [lastX, lastY] = [p.x, p.y]; };
+        const stopDrawing = () => { isDrawing = false; };
+        const draw = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getMousePos(drawingCanvas, e.touches ? e.touches[0] : e); drawingCtx.beginPath(); drawingCtx.moveTo(lastX, lastY); drawingCtx.lineTo(p.x, p.y); drawingCtx.stroke(); [lastX, lastY] = [p.x, p.y]; };
+        
+        drawingCanvas.addEventListener('mousedown', startDrawing);
+        drawingCanvas.addEventListener('mousemove', draw);
+        drawingCanvas.addEventListener('mouseup', stopDrawing);
+        drawingCanvas.addEventListener('mouseout', stopDrawing);
+        drawingCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+        drawingCanvas.addEventListener('touchmove', draw, { passive: false });
+        drawingCanvas.addEventListener('touchend', stopDrawing);
+
+        // --- INITIALIZE APP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCanvas();
+            setCurrentKanji('日');
+            populateJlptGrid('N5');
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>
