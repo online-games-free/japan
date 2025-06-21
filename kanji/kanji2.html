@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KanjiMaster - Learn Japanese Characters</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f9f7f0, #fff9e6);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 0;
+            transition: background 0.3s;
+        }
+        
+        /* Language Toggle */
+        .language-toggle {
+            position: absolute;
+            top: 25px;
+            right: 20px;
+            z-index: 200;
+        }
+        
+        .toggle-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-btn:hover {
+            background: #fff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .toggle-btn i {
+            color: #e62e1f;
+        }
+        
+        header {
+            background: #fff;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: #e62e1f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .logo-text span {
+            color: #e62e1f;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e62e1f;
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(to right, #e62e1f, #f15a22);
+            color: white;
+            border-radius: 0 0 30px 30px;
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.95;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            background: white;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        #kanjiInput {
+            flex-grow: 1;
+            padding: 18px 25px;
+            border: none;
+            font-size: 1.2rem;
+            outline: none;
+        }
+        
+        #searchButton {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0 35px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        #searchButton:hover {
+            background: #e62e1f;
+        }
+        
+        .tool-container {
+            display: flex;
+            gap: 30px;
+            padding: 50px 0;
+        }
+        
+        .kanji-display {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .kanji-character {
+            font-size: 10rem; /* Adjusted for more info */
+            margin: 10px 0;
+            color: #333;
+            font-family: "Noto Serif JP", serif;
+        }
+        
+        .kanji-info {
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .kanji-info h3 {
+            border-bottom: 2px solid #e62e1f;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #e62e1f;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Changed to single column */
+            gap: 15px;
+        }
+        
+        .info-item {
+            background: #f9f7f0;
+            padding: 12px;
+            border-radius: 10px;
+        }
+        
+        .info-item h4 {
+            font-size: 0.9rem;
+            color: #888;
+            margin-bottom: 5px;
+        }
+        
+        .info-item p {
+            font-size: 1.1rem;
+            font-weight: 500;
+            word-wrap: break-word;
+        }
+        
+        .stroke-order {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.08);
+        }
+        
+        .canvas-container {
+            background: #f9f7f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .canvas-layers {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        #guideCanvas, #drawingCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #guideCanvas {
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        #drawingCanvas {
+            background: transparent;
+            border-radius: 10px;
+            cursor: crosshair;
+            z-index: 2;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary {
+            background: #f9f7f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e8e4d9;
+        }
+        
+        .btn-load-more {
+            background-color: #e62e1f;
+            color: white;
+            padding: 10px 30px;
+            border-radius: 20px;
+        }
+        .btn-load-more:hover {
+             background: #c52619;
+        }
+
+        .practice-info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f9f7f0;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .practice-info strong {
+            color: #e62e1f;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 40px;
+            color: #333;
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #e62e1f;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+        
+        .kanji-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+        }
+        
+        .kanji-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 150px;
+        }
+        
+        .kanji-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(230, 46, 31, 0.15);
+        }
+        
+        .kanji-card .character {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            font-family: "Noto Serif JP", serif;
+            line-height: 1;
+        }
+        
+        .kanji-card .meaning {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .practice-instructions {
+            background: #f0f9ff;
+            border-left: 4px solid #e62e1f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .practice-instructions h4 {
+            margin-bottom: 8px;
+            color: #e62e1f;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .guide-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .guide-toggle {
+            width: 50px;
+            height: 24px;
+            background: #ddd;
+            border-radius: 12px;
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .guide-toggle.active {
+            background: #e62e1f;
+        }
+        
+        .guide-toggle-handle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s ease;
+        }
+        
+        .guide-toggle.active .guide-toggle-handle {
+            transform: translateX(26px);
+        }
+
+        /* JLPT Levels Section Styles */
+        .jlpt-levels {
+            padding: 50px 0;
+        }
+
+        .jlpt-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .jlpt-tab-btn {
+            padding: 12px 25px;
+            border: 2px solid #ddd;
+            background-color: #fff;
+            color: #555;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .jlpt-tab-btn:hover {
+            background-color: #f9f7f0;
+            border-color: #e62e1f;
+        }
+
+        .jlpt-tab-btn.active {
+            background-color: #e62e1f;
+            color: #fff;
+            border-color: #e62e1f;
+            box-shadow: 0 4px 15px rgba(230, 46, 31, 0.3);
+        }
+
+        #load-more-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .tool-container { flex-direction: column; }
+            .hero h1 { font-size: 2.3rem; }
+            nav ul { display: none; }
+            .language-toggle { top: 90px; right: 20px; }
+        }
+        
+        @media (max-width: 600px) {
+            .kanji-character { font-size: 8rem; }
+            .kanji-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1.1rem; }
+            .section-title { font-size: 1.8rem; }
+            .toggle-btn { padding: 6px 12px; font-size: 0.8rem; }
+            .controls { gap: 10px; }
+            .btn { padding: 10px 15px; font-size: 0.9rem; }
+            .jlpt-tab-btn { padding: 8px 15px; font-size: 0.9rem;}
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <button class="toggle-btn" id="langToggle">
+            <i class="fas fa-globe"></i> 
+            <span id="langText">English</span>
+        </button>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon"><i class="fas fa-brush"></i></div>
+                    <div class="logo-text">Kanji<span>Master</span></div>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#" data-key="navHome">Home</a></li>
+                        <li><a href="#" data-key="navKanjiList">Kanji List</a></li>
+                        <li><a href="#" data-key="navJlptLevels">JLPT Levels</a></li>
+                        <li><a href="#" data-key="navBlog">Blog</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1 data-key="heroTitle">Master Japanese Kanji</h1>
+            <p data-key="heroSubtitle">Explore Kanji by JLPT level and perfect your writing with our practice tool.</p>
+            <div class="search-box">
+                <input type="text" id="kanjiInput" placeholder="Enter a kanji (e.g., 漢, 語, 日)" data-key-placeholder="kanjiInputPlaceholder">
+                <button id="searchButton"><i class="fas fa-search"></i> <span data-key="searchText">Search</span></button>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="tool-container">
+            <div class="kanji-display">
+                <div class="kanji-character" id="kanjiChar">日</div>
+                <div class="kanji-info">
+                    <h3 data-key="kanjiInfoTitle">Kanji Information</h3>
+                    <div class="info-grid">
+                        <div class="info-item"><h4 data-key="meaningLabel">Meaning</h4><p id="kanjiMeaning">Day, Sun</p></div>
+                        <div class="info-item"><h4 data-key="readingKanaLabel">Reading (Kana)</h4><p id="kanjiReadingKana">ニチ、ジツ / ひ、-び、-か</p></div>
+                        <div class="info-item"><h4 data-key="readingRomajiLabel">Reading (Romaji)</h4><p id="kanjiReadingRomaji">NICHI, JITSU / hi, -bi, -ka</p></div>
+                        <div class="info-item"><h4 data-key="strokeLabel">Strokes</h4><p id="kanjiStrokes">4 Strokes</p></div>
+                        <div class="info-item"><h4 data-key="jlptLabel">JLPT Level</h4><p id="kanjiJlpt">N5</p></div>
+                        <div class="info-item"><h4 data-key="gradeLabel">Grade</h4><p id="kanjiGrade">Grade 1</p></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stroke-order">
+                <h2 data-key="strokeTitle">Practice Canvas</h2>
+                <div class="practice-instructions">
+                    <h4><i class="fas fa-pencil-alt"></i> <span data-key="practiceModeTitle">Practice Mode</span></h4>
+                    <p data-key="practiceDesc">Use your mouse or finger to draw the kanji on the canvas below. You can toggle the guide display.</p>
+                </div>
+                <div class="canvas-container">
+                    <div class="canvas-layers">
+                        <canvas id="guideCanvas" width="300" height="300"></canvas>
+                        <canvas id="drawingCanvas" width="300" height="300"></canvas>
+                    </div>
+                </div>
+                <div class="guide-control">
+                    <div class="guide-toggle active" id="guideToggle"><div class="guide-toggle-handle"></div></div>
+                    <span id="guideLabel" data-key="guideLabelShow">Show Guide</span>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-secondary" id="clearBtn"><i class="fas fa-eraser"></i> <span data-key="clearText">Clear</span></button>
+                    <button class="btn btn-secondary" id="resetBtn"><i class="fas fa-redo"></i> <span data-key="resetText">Reset</span></button>
+                </div>
+                <div class="practice-info">
+                    <p><strong data-key="practiceInfoChar">Character:</strong> <span id="practiceChar">日</span> | <strong data-key="practiceInfoStrokes">Strokes:</strong> <span id="practiceStrokes">4</span></p>
+                </div>
+            </div>
+        </div>
+
+        <section class="jlpt-levels">
+            <h2 class="section-title" data-key="jlptSectionTitle">Kanji by JLPT Level</h2>
+            <div class="jlpt-tabs">
+                <button class="jlpt-tab-btn active" data-level="N5">N5</button>
+                <button class="jlpt-tab-btn" data-level="N4">N4</button>
+                <button class="jlpt-tab-btn" data-level="N3">N3</button>
+                <button class="jlpt-tab-btn" data-level="N2">N2</button>
+                <button class="jlpt-tab-btn" data-level="N1">N1</button>
+            </div>
+            <div class="jlpt-content">
+                <div id="jlpt-kanji-grid" class="kanji-grid"></div>
+                <div id="load-more-container"></div>
+            </div>
+        </section>
+        
+    </div>
+    
+    <script>
+        // --- LANGUAGE & TRANSLATION ---
+        let isEnglish = true;
+
+        const translations = {
+            en: {
+                navHome: "Home", navKanjiList: "Kanji List", navJlptLevels: "JLPT Levels", navBlog: "Blog",
+                heroTitle: "Master Japanese Kanji",
+                heroSubtitle: "Explore Kanji by JLPT level and perfect your writing with our practice tool.",
+                kanjiInputPlaceholder: "Enter a kanji (e.g., 漢, 語, 日)",
+                searchText: "Search", kanjiInfoTitle: "Kanji Information",
+                meaningLabel: "Meaning", readingKanaLabel: "Reading (Kana)", readingRomajiLabel: "Reading (Romaji)",
+                strokeLabel: "Strokes", jlptLabel: "JLPT Level", gradeLabel: "Grade",
+                strokeTitle: "Practice Canvas", practiceModeTitle: "Practice Mode",
+                practiceDesc: "Use your mouse or finger to draw the kanji on the canvas below. You can toggle the guide display.",
+                guideLabelShow: "Show Guide", guideLabelHide: "Hide Guide", clearText: "Clear", resetText: "Reset",
+                practiceInfoChar: "Character:", practiceInfoStrokes: "Strokes:",
+                jlptSectionTitle: "Kanji by JLPT Level", loadMore: "Load More",
+            },
+            jp: {
+                navHome: "ホーム", navKanjiList: "漢字リスト", navJlptLevels: "JLPT レベル", navBlog: "ブログ",
+                heroTitle: "日本の漢字をマスターしよう",
+                heroSubtitle: "JLPTレベル別に漢字を探し、練習ツールで書き方を完璧にしましょう。",
+                kanjiInputPlaceholder: "漢字を入力してください (例: 漢, 語, 日)",
+                searchText: "検索", kanjiInfoTitle: "漢字情報",
+                meaningLabel: "意味", readingKanaLabel: "読み方（かな）", readingRomajiLabel: "読み方（ローマ字）",
+                strokeLabel: "画数", jlptLabel: "JLPTレベル", gradeLabel: "学年",
+                strokeTitle: "練習キャンバス", practiceModeTitle: "練習モード",
+                practiceDesc: "下のキャンバスにマウスや指を使って漢字を描いてみましょう。ガイド表示を切り替えることができます。",
+                guideLabelShow: "ガイドを表示", guideLabelHide: "ガイドを隠す", clearText: "クリア", resetText: "リセット",
+                practiceInfoChar: "文字:", practiceInfoStrokes: "画数:",
+                jlptSectionTitle: "JLPTレベル別漢字", loadMore: "もっと読み込む",
+            }
+        };
+
+        function updateLanguage() {
+            const lang = isEnglish ? 'en' : 'jp';
+            document.getElementById('langText').textContent = isEnglish ? '日本語' : 'English';
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.dataset.key;
+                if (translations[lang][key]) el.textContent = translations[lang][key];
+            });
+
+            document.querySelectorAll('[data-key-placeholder]').forEach(el => {
+                const key = el.dataset.keyPlaceholder;
+                if (translations[lang][key]) el.placeholder = translations[lang][key];
+            });
+
+            updateKanjiInfo(currentKanji);
+            document.querySelectorAll('#jlpt-kanji-grid .meaning').forEach(card => {
+                const kanji = card.parentElement.dataset.kanji;
+                card.textContent = kanjiDatabase[kanji].meaning[lang];
+            });
+            updateLoadMoreButton();
+        }
+        
+        // --- KANJI DATABASE ---
+        // Each entry now has a reading object with 'kana' and 'romaji'
+        const kanjiDatabase = {
+            // JLPT N5 (80 Kanji)
+            '一': { reading: { kana: 'イチ, イツ / ひと', romaji: 'ICHI, ITSU / hito' }, meaning: {jp: 'ひとつ', en: 'One'}, strokesCount: 1, jlpt: 'N5', grade: '1' },
+            '二': { reading: { kana: 'ニ / ふた', romaji: 'NI / futa' }, meaning: {jp: 'ふたつ', en: 'Two'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '三': { reading: { kana: 'サン / み', romaji: 'SAN / mi' }, meaning: {jp: 'みっつ', en: 'Three'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '四': { reading: { kana: 'シ / よん, よ', romaji: 'SHI / yon, yo' }, meaning: {jp: 'よっつ', en: 'Four'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '五': { reading: { kana: 'ゴ / いつ', romaji: 'GO / itsu' }, meaning: {jp: 'いつつ', en: 'Five'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '六': { reading: { kana: 'ロク / む', romaji: 'ROKU / mu' }, meaning: {jp: 'むっつ', en: 'Six'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '七': { reading: { kana: 'シチ / なな', romaji: 'SHICHI / nana' }, meaning: {jp: 'ななつ', en: 'Seven'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '八': { reading: { kana: 'ハチ / や', romaji: 'HACHI / ya' }, meaning: {jp: 'やっつ', en: 'Eight'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '九': { reading: { kana: 'キュウ, ク / ここの', romaji: 'KYUU, KU / kokono' }, meaning: {jp: 'ここのつ', en: 'Nine'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '十': { reading: { kana: 'ジュウ / とお', romaji: 'JUU / too' }, meaning: {jp: 'とお', en: 'Ten'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '百': { reading: { kana: 'ヒャク', romaji: 'HYAKU' }, meaning: {jp: 'ひゃく', en: 'Hundred'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            '千': { reading: { kana: 'セン / ち', romaji: 'SEN / chi' }, meaning: {jp: 'ち', en: 'Thousand'}, strokesCount: 3, jlpt: 'N5', grade: '2' },
+            '万': { reading: { kana: 'マン, バン', romaji: 'MAN, BAN' }, meaning: {jp: 'よろず', en: 'Ten Thousand'}, strokesCount: 3, jlpt: 'N5', grade: '2' },
+            '円': { reading: { kana: 'エン / まる', romaji: 'EN / maru' }, meaning: {jp: 'えん', en: 'Yen, Circle'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '時': { reading: { kana: 'ジ / とき', romaji: 'JI / toki' }, meaning: {jp: 'とき', en: 'Time, Hour'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+            '日': { reading: { kana: 'ニチ, ジツ / ひ, -か', romaji: 'NICHI, JITSU / hi, -ka' }, meaning: {jp: 'ひ', en: 'Day, Sun'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '週': { reading: { kana: 'シュウ', romaji: 'SHUU' }, meaning: {jp: 'しゅう', en: 'Week'}, strokesCount: 11, jlpt: 'N5', grade: '2' },
+            '月': { reading: { kana: 'ゲツ, ガツ / つき', romaji: 'GETSU, GATSU / tsuki' }, meaning: {jp: 'つき', en: 'Month, Moon'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '年': { reading: { kana: 'ネン / とし', romaji: 'NEN / toshi' }, meaning: {jp: 'とし', en: 'Year'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            '分': { reading: { kana: 'フン, ブン, プン / わ', romaji: 'FUN, BUN, PUN / wa' }, meaning: {jp: 'わける', en: 'Minute, Part'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+            '人': { reading: { kana: 'ジン, ニン / ひと', romaji: 'JIN, NIN / hito' }, meaning: {jp: 'ひと', en: 'Person'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '今': { reading: { kana: 'コン, キン / いま', romaji: 'KON, KIN / ima' }, meaning: {jp: 'いま', en: 'Now'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+            '休': { reading: { kana: 'キュウ / やす', romaji: 'KYUU / yasu' }, meaning: {jp: 'やすむ', en: 'Rest'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            '何': { reading: { kana: 'カ / なに, なん', romaji: 'KA / nani, nan' }, meaning: {jp: 'なに', en: 'What'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+            '先': { reading: { kana: 'セン / さき', romaji: 'SEN / saki' }, meaning: {jp: 'さき', en: 'Ahead, Previous'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            '入': { reading: { kana: 'ニュウ / はい, い', romaji: 'NYUU / hai, i' }, meaning: {jp: 'はいる', en: 'Enter'}, strokesCount: 2, jlpt: 'N5', grade: '1' },
+            '出': { reading: { kana: 'シュツ / で, だ', romaji: 'SHUTSU / de, da' }, meaning: {jp: 'でる', en: 'Exit'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '上': { reading: { kana: 'ジョウ / うえ, あ', romaji: 'JOU / ue, a' }, meaning: {jp: 'うえ', en: 'Up, Above'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '下': { reading: { kana: 'カ, ゲ / した, さ', romaji: 'KA, GE / shita, sa' }, meaning: {jp: 'した', en: 'Down, Below'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '右': { reading: { kana: 'ウ, ユウ / みぎ', romaji: 'U, YUU / migi' }, meaning: {jp: 'みぎ', en: 'Right'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '左': { reading: { kana: 'サ / ひだり', romaji: 'SA / hidari' }, meaning: {jp: 'ひだり', en: 'Left'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '前': { reading: { kana: 'ゼン / まえ', romaji: 'ZEN / mae' }, meaning: {jp: 'まえ', en: 'Front, Before'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+            '後': { reading: { kana: 'ゴ, コウ / うし, あと', romaji: 'GO, KOU / ushi, ato' }, meaning: {jp: 'うしろ', en: 'Back, After'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+            '東': { reading: { kana: 'トウ / ひがし', romaji: 'TOU / higashi' }, meaning: {jp: 'ひがし', en: 'East'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+            '西': { reading: { kana: 'セイ, サイ / にし', romaji: 'SEI, SAI / nishi' }, meaning: {jp: 'にし', en: 'West'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+            '南': { reading: { kana: 'ナン / みなみ', romaji: 'NAN / minami' }, meaning: {jp: 'みなみ', en: 'South'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+            '北': { reading: { kana: 'ホク / きた', romaji: 'HOKU / kita' }, meaning: {jp: 'きた', en: 'North'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+            '国': { reading: { kana: 'コク / くに', romaji: 'KOKU / kuni' }, meaning: {jp: 'くに', en: 'Country'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+            '男': { reading: { kana: 'ダン, ナン / おとこ', romaji: 'DAN, NAN / otoko' }, meaning: {jp: 'おとこ', en: 'Man'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+            '女': { reading: { kana: 'ジョ, ニョ / おんな', romaji: 'JO, NYO / onna' }, meaning: {jp: 'おんな', en: 'Woman'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '子': { reading: { kana: 'シ, ス / こ', romaji: 'SHI, SU / ko' }, meaning: {jp: 'こども', en: 'Child'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '学': { reading: { kana: 'ガク / まな', romaji: 'GAKU / mana' }, meaning: {jp: 'まなぶ', en: 'Study'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+            '生': { reading: { kana: 'セイ, ショウ / う, い', romaji: 'SEI, SHOU / u, i' }, meaning: {jp: 'うまれる', en: 'Life, Birth'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '父': { reading: { kana: 'フ / ちち', romaji: 'FU / chichi' }, meaning: {jp: 'ちち', en: 'Father'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+            '母': { reading: { kana: 'ボ / はは', romaji: 'BO / haha' }, meaning: {jp: 'はは', en: 'Mother'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+            '友': { reading: { kana: 'ユウ / とも', romaji: 'YUU / tomo' }, meaning: {jp: 'ともだち', en: 'Friend'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+            '大': { reading: { kana: 'ダイ, タイ / おお', romaji: 'DAI, TAI / oo' }, meaning: {jp: 'おおきい', en: 'Big'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '小': { reading: { kana: 'ショウ / ちい', romaji: 'SHOU / chii' }, meaning: {jp: 'ちいさい', en: 'Small'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '高': { reading: { kana: 'コウ / たか', romaji: 'KOU / taka' }, meaning: {jp: 'たかい', en: 'High, Tall'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+            '安': { reading: { kana: 'アン / やす', romaji: 'AN / yasu' }, meaning: {jp: 'やすい', en: 'Cheap, Safe'}, strokesCount: 6, jlpt: 'N5', grade: '4' },
+            '新': { reading: { kana: 'シン / あたら', romaji: 'SHIN / atara' }, meaning: {jp: 'あたらしい', en: 'New'}, strokesCount: 13, jlpt: 'N5', grade: '2' },
+            '古': { reading: { kana: 'コ / ふる', romaji: 'KO / furu' }, meaning: {jp: 'ふるい', en: 'Old'}, strokesCount: 5, jlpt: 'N5', grade: '2' },
+            '長': { reading: { kana: 'チョウ / なが', romaji: 'CHOU / naga' }, meaning: {jp: 'ながい', en: 'Long'}, strokesCount: 8, jlpt: 'N5', grade: '2' },
+            '多': { reading: { kana: 'タ / おお', romaji: 'TA / oo' }, meaning: {jp: 'おおい', en: 'Many, Much'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+            '少': { reading: { kana: 'ショウ / すく, すこ', romaji: 'SHOU / suku, suko' }, meaning: {jp: 'すくない', en: 'Few, a little'}, strokesCount: 4, jlpt: 'N5', grade: '2' },
+            '行': { reading: { kana: 'コウ, ギョウ / い, ゆ', romaji: 'KOU, GYOU / i, yu' }, meaning: {jp: 'いく', en: 'Go'}, strokesCount: 6, jlpt: 'N5', grade: '2' },
+            '来': { reading: { kana: 'ライ / く', romaji: 'RAI / ku' }, meaning: {jp: 'くる', en: 'Come'}, strokesCount: 7, jlpt: 'N5', grade: '2' },
+            '食': { reading: { kana: 'ショク / た', romaji: 'SHOKU / ta' }, meaning: {jp: 'たべる', en: 'Eat'}, strokesCount: 9, jlpt: 'N5', grade: '2' },
+            '飲': { reading: { kana: 'イン / の', romaji: 'IN / no' }, meaning: {jp: 'のむ', en: 'Drink'}, strokesCount: 12, jlpt: 'N5', grade: '3' },
+            '見': { reading: { kana: 'ケン / み', romaji: 'KEN / mi' }, meaning: {jp: 'みる', en: 'See'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+            '聞': { reading: { kana: 'ブン, モン / き', romaji: 'BUN, MON / ki' }, meaning: {jp: 'きく', en: 'Hear, Listen'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+            '読': { reading: { kana: 'ドク / よ', romaji: 'DOKU / yo' }, meaning: {jp: 'よむ', en: 'Read'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+            '書': { reading: { kana: 'ショ / か', romaji: 'SHO / ka' }, meaning: {jp: 'かく', en: 'Write'}, strokesCount: 10, jlpt: 'N5', grade: '2' },
+            '話': { reading: { kana: 'ワ / はな, はなし', romaji: 'WA / hana, hanashi' }, meaning: {jp: 'はなす', en: 'Speak'}, strokesCount: 13, jlpt: 'N5', grade: '2' },
+            '買': { reading: { kana: 'バイ / か', romaji: 'BAI / ka' }, meaning: {jp: 'かう', en: 'Buy'}, strokesCount: 12, jlpt: 'N5', grade: '2' },
+            '名': { reading: { kana: 'メイ, ミョウ / な', romaji: 'MEI, MYOU / na' }, meaning: {jp: 'なまえ', en: 'Name'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            '語': { reading: { kana: 'ゴ / かた', romaji: 'GO / kata' }, meaning: {jp: 'かたる', en: 'Language, Word'}, strokesCount: 14, jlpt: 'N5', grade: '2' },
+            '駅': { reading: { kana: 'エキ', romaji: 'EKI' }, meaning: {jp: 'えき', en: 'Station'}, strokesCount: 14, jlpt: 'N5', grade: '3' },
+            '車': { reading: { kana: 'シャ / くるま', romaji: 'SHA / kuruma' }, meaning: {jp: 'くるま', en: 'Car, Vehicle'}, strokesCount: 7, jlpt: 'N5', grade: '1' },
+            '道': { reading: { kana: 'ドウ / みち', romaji: 'DOU / michi' }, meaning: {jp: 'みち', en: 'Road, Way'}, strokesCount: 12, jlpt: 'N5', grade: '2' },
+            '金': { reading: { kana: 'キン / かね', romaji: 'KIN / kane' }, meaning: {jp: 'かね', en: 'Gold, Money'}, strokesCount: 8, jlpt: 'N5', grade: '1' },
+            '土': { reading: { kana: 'ド, ト / つち', romaji: 'DO, TO / tsuchi' }, meaning: {jp: 'つち', en: 'Earth, Soil'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '木': { reading: { kana: 'ボク, モク / き', romaji: 'BOKU, MOKU / ki' }, meaning: {jp: 'き', en: 'Tree, Wood'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '水': { reading: { kana: 'スイ / みず', romaji: 'SUI / mizu' }, meaning: {jp: 'みず', en: 'Water'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '火': { reading: { kana: 'カ / ひ', romaji: 'KA / hi' }, meaning: {jp: 'ひ', en: 'Fire'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '山': { reading: { kana: 'サン / やま', romaji: 'SAN / yama' }, meaning: {jp: 'やま', en: 'Mountain'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '川': { reading: { kana: 'セン / かわ', romaji: 'SEN / kawa' }, meaning: {jp: 'かわ', en: 'River'}, strokesCount: 3, jlpt: 'N5', grade: '1' },
+            '田': { reading: { kana: 'デン / た', romaji: 'DEN / ta' }, meaning: {jp: 'た', en: 'Rice Field'}, strokesCount: 5, jlpt: 'N5', grade: '1' },
+            '天': { reading: { kana: 'テン / あめ', romaji: 'TEN / ame' }, meaning: {jp: 'あめ', en: 'Heaven, Sky'}, strokesCount: 4, jlpt: 'N5', grade: '1' },
+            '気': { reading: { kana: 'キ, ケ', romaji: 'KI, KE' }, meaning: {jp: 'いき', en: 'Spirit, Air'}, strokesCount: 6, jlpt: 'N5', grade: '1' },
+            // N4 Samples
+            '会': { reading: { kana: 'カイ / あ.う', romaji: 'KAI / a.u' }, meaning: {jp: '会う, 会社', en: 'To meet, company'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+            '同': { reading: { kana: 'ドウ / おな.じ', romaji: 'DOU / ona.ji' }, meaning: {jp: '同じ', en: 'Same'}, strokesCount: 6, jlpt: 'N4', grade: '2' },
+            '事': { reading: { kana: 'ジ / こと', romaji: 'JI / koto' }, meaning: {jp: '事', en: 'Thing, matter'}, strokesCount: 8, jlpt: 'N4', grade: '3' },
+            // N3 Samples
+            '政': { reading: { kana: 'セイ', romaji: 'SEI' }, meaning: {jp: '政治', en: 'Politics'}, strokesCount: 9, jlpt: 'N3', grade: '5' },
+            '議': { reading: { kana: 'ギ', romaji: 'GI' }, meaning: {jp: '会議', en: 'Discussion'}, strokesCount: 20, jlpt: 'N3', grade: '4' },
+            '民': { reading: { kana: 'ミン / たみ', romaji: 'MIN / tami' }, meaning: {jp: '国民', en: 'People, nation'}, strokesCount: 5, jlpt: 'N3', grade: '4' },
+            // N2 Samples
+            '際': { reading: { kana: 'サイ / きわ', romaji: 'SAI / kiwa' }, meaning: {jp: '国際', en: 'Occasion, international'}, strokesCount: 14, jlpt: 'N2', grade: '6' },
+            '係': { reading: { kana: 'ケイ / かかり', romaji: 'KEI / kakari' }, meaning: {jp: '関係', en: 'Connection, relation'}, strokesCount: 9, jlpt: 'N2', grade: '3' },
+            '価': { reading: { kana: 'カ / あたい', romaji: 'KA / atai' }, meaning: {jp: '価格', en: 'Price, value'}, strokesCount: 8, jlpt: 'N2', grade: '5' },
+            // N1 Samples
+            '陛': { reading: { kana: 'ヘイ', romaji: 'HEI' }, meaning: {jp: '陛下', en: 'Your Majesty'}, strokesCount: 10, jlpt: 'N1', grade: 'S' },
+            '彙': { reading: { kana: 'イ', romaji: 'I' }, meaning: {jp: '語彙', en: 'Vocabulary'}, strokesCount: 13, jlpt: 'N1', grade: 'S' },
+            '茨': { reading: { kana: 'シ / いばら', romaji: 'SHI / ibara' }, meaning: {jp: '茨', en: 'Thorn, briar'}, strokesCount: 9, jlpt: 'N1', grade: 'S' },
+        };
+
+        // --- CANVAS & UI STATE ---
+        let currentKanji = '日';
+        let isDrawing = false, lastX = 0, lastY = 0;
+        let guideVisible = true;
+        let currentLevelKanji = [];
+        let renderedKanjiCount = 0;
+        const KANJI_PER_PAGE = 25;
+
+        // --- CANVAS LOGIC ---
+        const guideCanvas = document.getElementById('guideCanvas');
+        const guideCtx = guideCanvas.getContext('2d');
+        const drawingCanvas = document.getElementById('drawingCanvas');
+        const drawingCtx = drawingCanvas.getContext('2d');
+
+        function initializeCanvas() {
+            drawingCtx.lineWidth = 8;
+            drawingCtx.lineCap = 'round';
+            drawingCtx.strokeStyle = '#e62e1f';
+        }
+        
+        function drawKanjiGuide(kanji) {
+            guideCtx.clearRect(0, 0, guideCanvas.width, guideCanvas.height);
+            if (!guideVisible || !kanjiDatabase[kanji]) return;
+            guideCtx.font = "250px 'Noto Serif JP', serif";
+            guideCtx.fillStyle = "rgba(0, 0, 0, 0.15)";
+            guideCtx.textAlign = 'center';
+            guideCtx.textBaseline = 'middle';
+            guideCtx.fillText(kanji, guideCanvas.width / 2, guideCanvas.height / 2 + 15);
+        }
+
+        function clearDrawingCanvas() { drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); }
+        function resetCanvas() { clearDrawingCanvas(); drawKanjiGuide(currentKanji); }
+
+        // --- UI UPDATE LOGIC ---
+        function updateKanjiInfo(kanji) {
+            const data = kanjiDatabase[kanji];
+            if (!data) return;
+
+            const lang = isEnglish ? 'en' : 'jp';
+
+            document.getElementById('kanjiChar').textContent = kanji;
+            document.getElementById('kanjiMeaning').textContent = data.meaning[lang];
+            document.getElementById('kanjiReadingKana').textContent = data.reading.kana;
+            document.getElementById('kanjiReadingRomaji').textContent = data.reading.romaji;
+            document.getElementById('kanjiStrokes').textContent = isEnglish ? `${data.strokesCount} Strokes` : `${data.strokesCount}画`;
+            document.getElementById('kanjiJlpt').textContent = data.jlpt;
+            
+            let gradeText;
+            if (data.grade === 'S') {
+                gradeText = isEnglish ? 'General Use' : '一般';
+            } else {
+                gradeText = isEnglish ? `Grade ${data.grade}` : `小学校${data.grade}年生`;
+            }
+            document.getElementById('kanjiGrade').textContent = gradeText;
+            
+            document.getElementById('practiceChar').textContent = kanji;
+            document.getElementById('practiceStrokes').textContent = data.strokesCount;
+        }
+
+        function setCurrentKanji(kanji) {
+            currentKanji = kanji;
+            updateKanjiInfo(kanji);
+            resetCanvas();
+        }
+
+        // --- JLPT GRID & LOAD MORE LOGIC ---
+        const jlptGrid = document.getElementById('jlpt-kanji-grid');
+        const loadMoreContainer = document.getElementById('load-more-container');
+
+        function renderNextBatch() {
+            const lang = isEnglish ? 'en' : 'jp';
+            const batch = currentLevelKanji.slice(renderedKanjiCount, renderedKanjiCount + KANJI_PER_PAGE);
+
+            batch.forEach(kanji => {
+                const data = kanjiDatabase[kanji];
+                const card = document.createElement('div');
+                card.className = 'kanji-card';
+                card.dataset.kanji = kanji;
+                card.innerHTML = `
+                    <div class="character">${kanji}</div>
+                    <div class="meaning">${data.meaning[lang]}</div>
+                `;
+                jlptGrid.appendChild(card);
+            });
+            renderedKanjiCount += batch.length;
+            addCardClickListeners('#jlpt-kanji-grid .kanji-card:not(.listener-added)');
+            updateLoadMoreButton();
+        }
+        
+        function updateLoadMoreButton() {
+            loadMoreContainer.innerHTML = '';
+            if (renderedKanjiCount < currentLevelKanji.length) {
+                const button = document.createElement('button');
+                button.className = 'btn btn-load-more';
+                button.textContent = isEnglish ? translations.en.loadMore : translations.jp.loadMore;
+                button.addEventListener('click', renderNextBatch);
+                loadMoreContainer.appendChild(button);
+            }
+        }
+        
+        function populateJlptGrid(level) {
+            jlptGrid.innerHTML = '';
+            currentLevelKanji = Object.keys(kanjiDatabase).filter(k => kanjiDatabase[k].jlpt === level);
+            renderedKanjiCount = 0;
+            renderNextBatch();
+        }
+
+        // --- EVENT LISTENERS ---
+        function addCardClickListeners(selector) {
+             document.querySelectorAll(selector).forEach(card => {
+                card.classList.add('listener-added');
+                card.addEventListener('click', function() {
+                    const kanji = this.dataset.kanji;
+                    document.getElementById('kanjiInput').value = kanji;
+                    setCurrentKanji(kanji);
+                    document.querySelector('.tool-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        }
+        
+        document.getElementById('langToggle').addEventListener('click', () => { isEnglish = !isEnglish; updateLanguage(); });
+        document.getElementById('searchButton').addEventListener('click', () => {
+            const kanji = document.getElementById('kanjiInput').value.trim().charAt(0);
+            if (kanji && kanjiDatabase[kanji]) setCurrentKanji(kanji);
+            else alert(isEnglish ? 'Kanji not found.' : '漢字が見つかりません。');
+        });
+        document.getElementById('clearBtn').addEventListener('click', clearDrawingCanvas);
+        document.getElementById('resetBtn').addEventListener('click', resetCanvas);
+        document.getElementById('guideToggle').addEventListener('click', function() {
+            guideVisible = !guideVisible; this.classList.toggle('active');
+            const key = guideVisible ? 'guideLabelShow' : 'guideLabelHide';
+            document.getElementById('guideLabel').textContent = isEnglish ? translations.en[key] : translations.jp[key];
+            drawKanjiGuide(currentKanji);
+        });
+        
+        document.querySelectorAll('.jlpt-tab-btn').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.jlpt-tab-btn').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                populateJlptGrid(tab.dataset.level);
+            });
+        });
+
+        // Drawing events
+        const getMousePos = (c, e) => { const r = c.getBoundingClientRect(); return { x: (e.clientX - r.left) / r.width * c.width, y: (e.clientY - r.top) / r.height * c.height }; };
+        const startDrawing = (e) => { e.preventDefault(); isDrawing = true; const p = getMousePos(drawingCanvas, e.touches ? e.touches[0] : e); [lastX, lastY] = [p.x, p.y]; };
+        const stopDrawing = () => { isDrawing = false; };
+        const draw = (e) => { if (!isDrawing) return; e.preventDefault(); const p = getMousePos(drawingCanvas, e.touches ? e.touches[0] : e); drawingCtx.beginPath(); drawingCtx.moveTo(lastX, lastY); drawingCtx.lineTo(p.x, p.y); drawingCtx.stroke(); [lastX, lastY] = [p.x, p.y]; };
+        
+        drawingCanvas.addEventListener('mousedown', startDrawing);
+        drawingCanvas.addEventListener('mousemove', draw);
+        drawingCanvas.addEventListener('mouseup', stopDrawing);
+        drawingCanvas.addEventListener('mouseout', stopDrawing);
+        drawingCanvas.addEventListener('touchstart', startDrawing, { passive: false });
+        drawingCanvas.addEventListener('touchmove', draw, { passive: false });
+        drawingCanvas.addEventListener('touchend', stopDrawing);
+
+        // --- INITIALIZE APP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCanvas();
+            setCurrentKanji('日');
+            populateJlptGrid('N5');
+            updateLanguage();
+        });
+    </script>
+</body>
+</html>
