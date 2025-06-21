@@ -1,1 +1,1293 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katakana Master - Learn Japanese Characters</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #1a6b8a; /* Deep Japanese blue */
+            --secondary: #1a1a1a; /* Dark charcoal */
+            --accent: #e6b422; /* Gold accent */
+            --light: #f0f7fa;
+            --paper: #f8fbfd;
+        }
+        
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--light);
+            color: var(--secondary);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0f7fa"/><path d="M0,0 Q50,20 100,0 L100,100 Q50,80 0,100 Z" fill="%23f8fbfd" opacity="0.5"/></svg>');
+            background-size: cover;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><circle cx="100" cy="100" r="5" fill="%231a6b8a" fill-opacity="0.1"/></svg>');
+            z-index: -1;
+        }
+        
+        /* Language Toggle */
+        .language-toggle {
+            position: fixed;
+            top: 25px;
+            right: 20px;
+            z-index: 200;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            color: var(--primary);
+        }
+        
+        .toggle-btn:hover {
+            background: rgba(26, 107, 138, 0.1);
+        }
+        
+        .toggle-btn i {
+            font-size: 1.2rem;
+        }
+        
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 4px 10px rgba(26, 107, 138, 0.3);
+        }
+        
+        .logo-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            letter-spacing: -1px;
+        }
+        
+        .logo-text span {
+            color: var(--primary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 35px;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: var(--secondary);
+            font-weight: 600;
+            position: relative;
+            padding: 5px 0;
+            font-size: 1.1rem;
+            transition: color 0.3s;
+        }
+        
+        nav a:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover {
+            color: var(--primary);
+        }
+        
+        nav a:hover:after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 100px 20px 120px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(248, 251, 253, 0.9), rgba(240, 247, 250, 0.9));
+            border-radius: 0 0 50px 50px;
+            margin-bottom: 50px;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><path d="M50,50 Q100,30 150,50 L150,150 Q100,170 50,150 Z" fill="%231a6b8a" fill-opacity="0.05"/></svg>');
+            background-size: cover;
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            color: var(--secondary);
+            display: block;
+            font-size: 2.5rem;
+            margin-top: 10px;
+        }
+        
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: #444;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #145a77;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(26, 107, 138, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--secondary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(26, 107, 138, 0.05);
+            transform: translateY(-3px);
+        }
+        
+        /* Katakana Section */
+        .section-title {
+            text-align: center;
+            font-size: 2.8rem;
+            margin-bottom: 60px;
+            color: var(--secondary);
+            position: relative;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 5px;
+            background: var(--primary);
+            margin: 20px auto;
+            border-radius: 3px;
+        }
+        
+        .katakana-section {
+            padding: 80px 0;
+            background: var(--paper);
+            border-radius: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            margin: 0 20px 80px;
+        }
+        
+        .katakana-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .katakana-type {
+            margin-bottom: 60px;
+        }
+        
+        .type-title {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed rgba(26, 107, 138, 0.3);
+            font-weight: 600;
+        }
+        
+        .katakana-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .katakana-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(26, 107, 138, 0.1);
+        }
+        
+        .katakana-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(26, 107, 138, 0.1);
+            border-color: rgba(26, 107, 138, 0.2);
+        }
+        
+        .katakana-card .character {
+            font-size: 2.8rem;
+            font-family: "Noto Sans JP", sans-serif;
+            margin-bottom: 10px;
+            color: var(--secondary);
+            transition: transform 0.3s;
+        }
+        
+        .katakana-card:hover .character {
+            transform: scale(1.2);
+            color: var(--primary);
+        }
+        
+        .katakana-card .romaji {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        /* Practice Section */
+        .practice-section {
+            padding: 100px 0;
+            background: linear-gradient(to bottom, #f0f7fa, #fff);
+            position: relative;
+        }
+        
+        .practice-container {
+            display: flex;
+            gap: 50px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .practice-info {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .practice-info h3 {
+            font-size: 2.2rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .practice-info p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        
+        .tips {
+            background: rgba(26, 107, 138, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 30px 0;
+        }
+        
+        .tips h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips ul {
+            margin-left: 25px;
+        }
+        
+        .tips li {
+            margin-bottom: 8px;
+        }
+        
+        .practice-canvas {
+            flex: 1;
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            max-width: 500px;
+        }
+        
+        .current-char {
+            font-size: 8rem;
+            font-family: "Noto Sans JP", sans-serif;
+            color: var(--primary);
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .canvas-container {
+            background: #f0f7fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed rgba(26, 107, 138, 0.2);
+        }
+        
+        #katakanaCanvas {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            cursor: crosshair;
+        }
+        
+        .canvas-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 80px 0 40px;
+            position: relative;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23f0f7fa"></path><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23f0f7fa"></path><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23f0f7fa"></path></svg>');
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.6rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 60px;
+            color: #999;
+            font-size: 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .practice-container {
+                flex-direction: column;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            nav ul {
+                display: none;
+            }
+            
+            .katakana-section {
+                margin: 0 10px 60px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .hero {
+                padding: 80px 20px 100px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .katakana-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 15px;
+            }
+        }
+        
+        /* Animation */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="language-toggle">
+        <button class="toggle-btn" id="langToggle">
+            <i class="fas fa-globe"></i> 
+            <span id="langText">English</span>
+        </button>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <div class="logo-text">Katakana<span>Master</span></div>
+                </a>
+                <nav>
+                    <ul>
+                        <li><a href="#katakana">Katakana</a></li>
+                        <li><a href="#practice">Practice</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Master <span>カタカナ</span></h1>
+            <p>Learn Japanese Katakana characters for foreign words, names, and technical terms with our interactive tools</p>
+            <div class="cta-buttons">
+                <a href="#katakana" class="btn btn-primary"><i class="fas fa-book"></i> Start Learning</a>
+                <a href="#practice" class="btn btn-secondary"><i class="fas fa-pencil-alt"></i> Practice Writing</a>
+            </div>
+        </div>
+    </section>
+    
+    <section id="katakana" class="katakana-section">
+        <div class="container katakana-container">
+            <h2 class="section-title">Katakana Chart</h2>
+            
+            <div class="katakana-type">
+                <h3 class="type-title">Basic Characters</h3>
+                <div class="katakana-grid">
+                    <!-- Basic Katakana Characters -->
+                    <div class="katakana-card">
+                        <div class="character">ア</div>
+                        <div class="romaji">a</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">イ</div>
+                        <div class="romaji">i</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ウ</div>
+                        <div class="romaji">u</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">エ</div>
+                        <div class="romaji">e</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">オ</div>
+                        <div class="romaji">o</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">カ</div>
+                        <div class="romaji">ka</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">キ</div>
+                        <div class="romaji">ki</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ク</div>
+                        <div class="romaji">ku</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ケ</div>
+                        <div class="romaji">ke</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">コ</div>
+                        <div class="romaji">ko</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">サ</div>
+                        <div class="romaji">sa</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">シ</div>
+                        <div class="romaji">shi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ス</div>
+                        <div class="romaji">su</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">セ</div>
+                        <div class="romaji">se</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ソ</div>
+                        <div class="romaji">so</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">タ</div>
+                        <div class="romaji">ta</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">チ</div>
+                        <div class="romaji">chi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ツ</div>
+                        <div class="romaji">tsu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">テ</div>
+                        <div class="romaji">te</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ト</div>
+                        <div class="romaji">to</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ナ</div>
+                        <div class="romaji">na</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ニ</div>
+                        <div class="romaji">ni</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヌ</div>
+                        <div class="romaji">nu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ネ</div>
+                        <div class="romaji">ne</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ノ</div>
+                        <div class="romaji">no</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ハ</div>
+                        <div class="romaji">ha</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヒ</div>
+                        <div class="romaji">hi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">フ</div>
+                        <div class="romaji">fu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヘ</div>
+                        <div class="romaji">he</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ホ</div>
+                        <div class="romaji">ho</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">マ</div>
+                        <div class="romaji">ma</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ミ</div>
+                        <div class="romaji">mi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ム</div>
+                        <div class="romaji">mu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">メ</div>
+                        <div class="romaji">me</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">モ</div>
+                        <div class="romaji">mo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヤ</div>
+                        <div class="romaji">ya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ユ</div>
+                        <div class="romaji">yu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヨ</div>
+                        <div class="romaji">yo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ラ</div>
+                        <div class="romaji">ra</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">リ</div>
+                        <div class="romaji">ri</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ル</div>
+                        <div class="romaji">ru</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">レ</div>
+                        <div class="romaji">re</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ロ</div>
+                        <div class="romaji">ro</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ワ</div>
+                        <div class="romaji">wa</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヲ</div>
+                        <div class="romaji">wo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ン</div>
+                        <div class="romaji">n</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="katakana-type">
+                <h3 class="type-title">Dakuten & Handakuten</h3>
+                <div class="katakana-grid">
+                    <!-- Dakuten Characters -->
+                    <div class="katakana-card">
+                        <div class="character">ガ</div>
+                        <div class="romaji">ga</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ギ</div>
+                        <div class="romaji">gi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">グ</div>
+                        <div class="romaji">gu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ゲ</div>
+                        <div class="romaji">ge</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ゴ</div>
+                        <div class="romaji">go</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ザ</div>
+                        <div class="romaji">za</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ジ</div>
+                        <div class="romaji">ji</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ズ</div>
+                        <div class="romaji">zu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ゼ</div>
+                        <div class="romaji">ze</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ゾ</div>
+                        <div class="romaji">zo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ダ</div>
+                        <div class="romaji">da</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヂ</div>
+                        <div class="romaji">ji</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヅ</div>
+                        <div class="romaji">zu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">デ</div>
+                        <div class="romaji">de</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ド</div>
+                        <div class="romaji">do</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">バ</div>
+                        <div class="romaji">ba</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ビ</div>
+                        <div class="romaji">bi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ブ</div>
+                        <div class="romaji">bu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ベ</div>
+                        <div class="romaji">be</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ボ</div>
+                        <div class="romaji">bo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">パ</div>
+                        <div class="romaji">pa</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ピ</div>
+                        <div class="romaji">pi</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">プ</div>
+                        <div class="romaji">pu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ペ</div>
+                        <div class="romaji">pe</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ポ</div>
+                        <div class="romaji">po</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="katakana-type">
+                <h3 class="type-title">Combination Characters</h3>
+                <div class="katakana-grid">
+                    <!-- Combination Characters -->
+                    <div class="katakana-card">
+                        <div class="character">キャ</div>
+                        <div class="romaji">kya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">キュ</div>
+                        <div class="romaji">kyu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">キョ</div>
+                        <div class="romaji">kyo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">シャ</div>
+                        <div class="romaji">sha</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">シュ</div>
+                        <div class="romaji">shu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ショ</div>
+                        <div class="romaji">sho</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">チャ</div>
+                        <div class="romaji">cha</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">チュ</div>
+                        <div class="romaji">chu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">チョ</div>
+                        <div class="romaji">cho</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ニャ</div>
+                        <div class="romaji">nya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ニュ</div>
+                        <div class="romaji">nyu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ニョ</div>
+                        <div class="romaji">nyo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヒャ</div>
+                        <div class="romaji">hya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヒュ</div>
+                        <div class="romaji">hyu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ヒョ</div>
+                        <div class="romaji">hyo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ミャ</div>
+                        <div class="romaji">mya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ミュ</div>
+                        <div class="romaji">myu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ミョ</div>
+                        <div class="romaji">myo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">リャ</div>
+                        <div class="romaji">rya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">リュ</div>
+                        <div class="romaji">ryu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">リョ</div>
+                        <div class="romaji">ryo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ギャ</div>
+                        <div class="romaji">gya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ギュ</div>
+                        <div class="romaji">gyu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ギョ</div>
+                        <div class="romaji">gyo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ジャ</div>
+                        <div class="romaji">ja</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ジュ</div>
+                        <div class="romaji">ju</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ジョ</div>
+                        <div class="romaji">jo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ビャ</div>
+                        <div class="romaji">bya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ビュ</div>
+                        <div class="romaji">byu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ビョ</div>
+                        <div class="romaji">byo</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ピャ</div>
+                        <div class="romaji">pya</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ピュ</div>
+                        <div class="romaji">pyu</div>
+                    </div>
+                    <div class="katakana-card">
+                        <div class="character">ピョ</div>
+                        <div class="romaji">pyo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="practice" class="practice-section">
+        <div class="practice-container">
+            <div class="practice-info">
+                <h3>Practice Writing Katakana</h3>
+                <p>Katakana is used for foreign words, names, and technical terms in Japanese. Mastering these characters will help you read modern Japanese texts and understand borrowed words from other languages.</p>
+                <p>Katakana characters have more angular shapes compared to Hiragana. Focus on the straight lines and sharp angles as you practice.</p>
+                
+                <div class="tips">
+                    <h4><i class="fas fa-lightbulb"></i> Practice Tips</h4>
+                    <ul>
+                        <li>Start with basic characters before moving to combinations</li>
+                        <li>Practice writing loanwords like "コンピューター" (computer)</li>
+                        <li>Pay attention to stroke order and direction</li>
+                        <li>Compare similar characters (ソ vs ン, シ vs ツ)</li>
+                        <li>Say the character aloud as you write it</li>
+                    </ul>
+                </div>
+                
+                <a href="#" class="btn btn-primary"><i class="fas fa-download"></i> Download Practice Sheets</a>
+            </div>
+            
+            <div class="practice-canvas">
+                <div class="current-char floating">ア</div>
+                <div class="canvas-container">
+                    <canvas id="katakanaCanvas" width="300" height="300"></canvas>
+                </div>
+                <div class="canvas-controls">
+                    <button class="btn btn-secondary"><i class="fas fa-redo"></i> Clear</button>
+                    <button class="btn btn-primary"><i class="fas fa-arrow-right"></i> Next Character</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Katakana Master</h3>
+                <p>Your complete resource for learning Japanese Katakana characters. Interactive tools, practice exercises, and resources to help you master Katakana quickly and effectively.</p>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Katakana Chart</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Practice Writing</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Loanword Examples</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Learning Resources</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Mobile App</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Practice Sheets</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Flashcards</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Video Lessons</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Pronunciation Guide</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i> Blog</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Connect</h3>
+                <ul class="footer-links">
+                    <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                    <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                    <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                    <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+                    <li><a href="#"><i class="fab fa-discord"></i> Discord</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2023 Katakana Master. All rights reserved. | Designed with <i class="fas fa-heart" style="color: var(--primary);"></i> for Japanese learners worldwide
+        </div>
+    </footer>
+    
+    <script>
+        // Initialize canvas
+        const canvas = document.getElementById('katakanaCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set up drawing
+        ctx.lineWidth = 4;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#1a6b8a';
+        
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        
+        function startDrawing(e) {
+            isDrawing = true;
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        function draw(e) {
+            if (!isDrawing) return;
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            [lastX, lastY] = [e.offsetX, e.offsetY];
+        }
+        
+        function stopDrawing() {
+            isDrawing = false;
+        }
+        
+        // Event listeners for drawing
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        // Touch support for mobile devices
+        canvas.addEventListener('touchstart', e => {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousedown', {
+                clientX: touch.clientX - rect.left,
+                clientY: touch.clientY - rect.top
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+        
+        canvas.addEventListener('touchmove', e => {
+            const rect = canvas.getBoundingClientRect();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent('mousemove', {
+                clientX: touch.clientX - rect.left,
+                clientY: touch.clientY - rect.top
+            });
+            canvas.dispatchEvent(mouseEvent);
+        });
+        
+        canvas.addEventListener('touchend', () => {
+            const mouseEvent = new MouseEvent('mouseup', {});
+            canvas.dispatchEvent(mouseEvent);
+        });
+        
+        // Clear canvas when clear button is clicked
+        document.querySelector('.canvas-controls .btn-secondary').addEventListener('click', function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+        
+        // Next character button
+        const katakanaChars = ['ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ', 'サ', 'シ', 'ス', 'セ', 'ソ'];
+        let currentCharIndex = 0;
+        const charDisplay = document.querySelector('.current-char');
+        
+        document.querySelector('.canvas-controls .btn-primary').addEventListener('click', function() {
+            currentCharIndex = (currentCharIndex + 1) % katakanaChars.length;
+            charDisplay.textContent = katakanaChars[currentCharIndex];
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+        
+        // Language toggle functionality
+        const langToggle = document.getElementById('langToggle');
+        const langText = document.getElementById('langText');
+        let isJapanese = false;
+        
+        langToggle.addEventListener('click', () => {
+            isJapanese = !isJapanese;
+            updateLanguage();
+        });
+        
+        function updateLanguage() {
+            if (isJapanese) {
+                langText.textContent = '日本語';
+                document.querySelector('.hero h1').innerHTML = 'カタカナをマスターしよう';
+                document.querySelector('.hero p').textContent = 'インタラクティブなツール、練習問題、リソースで日本語のカタカナ文字を学びましょう';
+                document.querySelector('.btn-primary i').nextSibling.textContent = '学習を始める';
+                document.querySelector('.btn-secondary i').nextSibling.textContent = '書き方を練習する';
+                document.querySelector('.section-title').textContent = 'カタカナ一覧表';
+                document.querySelectorAll('.type-title')[0].textContent = '基本文字';
+                document.querySelectorAll('.type-title')[1].textContent = '濁点・半濁点';
+                document.querySelectorAll('.type-title')[2].textContent = '拗音';
+                document.querySelector('.practice-info h3').textContent = 'カタカナの書き方練習';
+                document.querySelector('.practice-info p').innerHTML = 'カタカナは外来語、名前、専門用語に使用されます。これらの文字をマスターすると、現代の日本語の文章を読み、他の言語から借用された言葉を理解するのに役立ちます。<br><br>カタカナ文字はひらがなに比べて直線的で角張った形をしています。練習する際は直線と鋭い角度に注目しましょう。';
+                document.querySelector('.tips h4').innerHTML = '<i class="fas fa-lightbulb"></i> 練習のコツ';
+                document.querySelector('.tips ul').innerHTML = '<li>組み合わせの前に基本文字から始めましょう</li><li>「コンピューター」のような外来語を書く練習をしましょう</li><li>筆順と方向に注意しましょう</li><li>似た文字を比較しましょう（ソ vs ン、シ vs ツ）</li><li>書きながら文字を声に出して読みましょう</li>';
+                document.querySelector('.practice-info .btn i').nextSibling.textContent = '練習用紙をダウンロード';
+            } else {
+                langText.textContent = 'English';
+                document.querySelector('.hero h1').innerHTML = 'Master <span>カタカナ</span>';
+                document.querySelector('.hero p').textContent = 'Learn Japanese Katakana characters for foreign words, names, and technical terms with our interactive tools';
+                document.querySelector('.btn-primary i').nextSibling.textContent = 'Start Learning';
+                document.querySelector('.btn-secondary i').nextSibling.textContent = 'Practice Writing';
+                document.querySelector('.section-title').textContent = 'Katakana Chart';
+                document.querySelectorAll('.type-title')[0].textContent = 'Basic Characters';
+                document.querySelectorAll('.type-title')[1].textContent = 'Dakuten & Handakuten';
+                document.querySelectorAll('.type-title')[2].textContent = 'Combination Characters';
+                document.querySelector('.practice-info h3').textContent = 'Practice Writing Katakana';
+                document.querySelector('.practice-info p').innerHTML = 'Katakana is used for foreign words, names, and technical terms in Japanese. Mastering these characters will help you read modern Japanese texts and understand borrowed words from other languages.<br><br>Katakana characters have more angular shapes compared to Hiragana. Focus on the straight lines and sharp angles as you practice.';
+                document.querySelector('.tips h4').innerHTML = '<i class="fas fa-lightbulb"></i> Practice Tips';
+                document.querySelector('.tips ul').innerHTML = '<li>Start with basic characters before moving to combinations</li><li>Practice writing loanwords like "コンピューター" (computer)</li><li>Pay attention to stroke order and direction</li><li>Compare similar characters (ソ vs ン, シ vs ツ)</li><li>Say the character aloud as you write it</li>';
+                document.querySelector('.practice-info .btn i').nextSibling.textContent = 'Download Practice Sheets';
+            }
+        }
+        
+        // Make katakana cards interactive
+        document.querySelectorAll('.katakana-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const char = this.querySelector('.character').textContent;
+                const romaji = this.querySelector('.romaji').textContent;
+                charDisplay.textContent = char;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Scroll to practice section
+                document.querySelector('.practice-section').scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
